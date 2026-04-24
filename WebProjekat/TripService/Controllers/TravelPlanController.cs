@@ -8,7 +8,7 @@ namespace TripService.Controllers
 {
     [ApiController]
     [Authorize]
-    [Route("/api/travel")]
+    [Route("/api/travel-plans")]
     public class TravelPlanController : ControllerBase
     {
         private ITravelPlanService travelPlanService;

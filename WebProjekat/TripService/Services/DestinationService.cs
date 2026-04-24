@@ -16,13 +16,14 @@ namespace TripService.Services
             this.context = context;
         }
 
-        public async Task<Destination> createDestination(CreateDestinationDto dto)
+        public async Task<Destination> createDestination(CreateDestinationDto dto, int travelPlanId)
         {
             if (dto.EndDate < dto.StartDate)
                 throw new ArgumentException("End date cannot be before start date");
 
             Destination destination = new Destination
             {
+                travelId = travelPlanId,
                 name = dto.Name,
                 description = dto.Description,
                 startDate = dto.StartDate,
@@ -48,12 +49,12 @@ namespace TripService.Services
             return true;
         }
 
-        public async Task<List<Destination>> getAllDestinastons()
+        public async Task<List<Destination>> getAllDestinastons(int travelPlanId)
         {
-            return await context.Destinations.ToListAsync();
+            return await context.Destinations.Where(d => d.travelId == travelPlanId).ToListAsync();
         }
 
-        public async Task<Destination> getDestination(int id)
+        public async Task<Destination?> getDestination(int id)
         {
             return await context.Destinations.FirstOrDefaultAsync(d => d.id == id);
         }

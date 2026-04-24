@@ -15,13 +15,12 @@ namespace TripService.Domain.Models
         [MaxLength(200)]
         public string name { get; set; } = null!;
 
-        [Required]
+        
         [MaxLength(200)]
-        public string description { get; set; } = null!;
+        public string? description { get; set; }
 
-        [Required]
         [MaxLength(200)]
-        public string location { get ; set; } = null!;
+        public string? location { get ; set; }
 
         [Required]
         public DateTime startDate { get; set; }
@@ -29,8 +28,8 @@ namespace TripService.Domain.Models
         [Required]
         public DateTime endDate { get; set; }
 
-        [Required]
+        
         [MaxLength(200)]
-        public string note { get; set; } = null!;
+        public string? note { get; set; }
     }
 }

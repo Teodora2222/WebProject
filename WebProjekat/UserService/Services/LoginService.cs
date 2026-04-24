@@ -32,11 +32,11 @@ namespace UserService.Services
                 return null;
 
             var claims = new[]
-            {
-                new Claim(ClaimTypes.NameIdentifier, existingUser.id.ToString()),
-                new Claim(ClaimTypes.Email, existingUser.email),
-                new Claim(ClaimTypes.Role, existingUser.role)
-            };
+{
+    new Claim("sub", existingUser.id.ToString()),
+    new Claim("email", existingUser.email),
+    new Claim("role", existingUser.role)
+};
 
             var key = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(configuration["Jwt:Key"]));

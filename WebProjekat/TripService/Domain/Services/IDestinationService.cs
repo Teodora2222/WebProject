@@ -5,7 +5,7 @@ namespace TripService.Domain.Services
 {
     public interface IDestinationService
     {
-        public Task<List<Destination>> getAllDestinastons();
+        public Task<List<Destination>> getAllDestinastons(int travelId);
 
         public Task<bool> deleteDestination(int id);
 
@@ -13,6 +13,6 @@ namespace TripService.Domain.Services
 
         public Task<Destination> getDestination(int id);
 
-        public Task<Destination> createDestination(CreateDestinationDto dto);
+        public Task<Destination> createDestination(CreateDestinationDto dto, int travelPlanId);
     }
 }

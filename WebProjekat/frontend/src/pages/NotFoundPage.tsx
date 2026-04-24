@@ -18,7 +18,7 @@ export function NotFoundPage(){
             onClick={ToPreviousPage}
             className="bg-red-700/60! hover:bg-red-700/70! text-white! px-6 py-2 rounded-xl transition"
           >
-            Vrati na prethodnu stranicu
+           Go back to previous Page
           </button>
         </div>
       </main>
