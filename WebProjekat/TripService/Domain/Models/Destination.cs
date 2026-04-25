@@ -23,10 +23,10 @@ namespace TripService.Domain.Models
         public string? location { get ; set; }
 
         [Required]
-        public DateTime startDate { get; set; }
+        public DateTime? startDate { get; set; }
 
         [Required]
-        public DateTime endDate { get; set; }
+        public DateTime? endDate { get; set; }
 
         
         [MaxLength(200)]

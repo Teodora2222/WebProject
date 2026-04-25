@@ -39,7 +39,7 @@ namespace TripService.Controllers
             try
             {
                 var result = await destinationService.createDestination(dto, travelPlanId);
-                return Ok(new { success = true, message = "Destination created" });
+                return CreatedAtAction(nameof(getDestination), new { travelPlanId, id = result.id }, result);
             }
             catch (Exception)
             {
@@ -70,6 +70,8 @@ namespace TripService.Controllers
             try
             {
                 var result = await destinationService.updateDestination(id, dto);
+                if (!result)
+                    return NotFound(new { success = false, message = "Destination not found" });
                 return Ok(new { success = true, message = "Destination updated" });
             }
             catch (Exception)
@@ -78,6 +80,7 @@ namespace TripService.Controllers
             }
         }
 
+        [HttpGet("{id}")]
         public async Task<IActionResult> getDestination(int id)
         {
             try

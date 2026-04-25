@@ -15,6 +15,8 @@ builder.Services.AddScoped<ITravelPlanService, TravelPlanService>();
 
 builder.Services.AddScoped<IDestinationService, DestinationService>();
 
+builder.Services.AddScoped<IActivityService, ActivityService>();
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {

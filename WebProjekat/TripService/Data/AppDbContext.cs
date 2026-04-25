@@ -8,5 +8,7 @@ namespace TripService.Data
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
         public DbSet<TravelPlan> TravelPlans { get; set; }
         public DbSet<Destination> Destinations { get; set; }
+
+        public DbSet<Activity> Activities { get; set; }
     }
 }
