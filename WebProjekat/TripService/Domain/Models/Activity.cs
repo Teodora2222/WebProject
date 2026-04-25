@@ -10,27 +10,29 @@ namespace TripService.Domain.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int id { get; set; }
 
-        [Required]
-        public int travelPlanId { get; set; }  
+        public int travelPlanId { get; set; }
 
         [Required]
         [MaxLength(200)]
         public string name { get; set; } = null!;
 
+        [Column("activityDate")]
         public DateTime date { get; set; }
 
-        public TimeOnly? time { get; set; }  
+        [Column("activityTime")]
+        public string? time { get; set; }
 
-        [MaxLength(200)]
+        [MaxLength(300)]
         public string? location { get; set; }
 
-        [MaxLength(200)]
+        [MaxLength(1000)]
         public string? description { get; set; }
 
         [Column(TypeName = "decimal(10,2)")]
         public decimal? estimatedCost { get; set; }
 
-        public Status status { get; set; } = Status.PLANNED;
+        [MaxLength(20)]
+        public string status { get; set; } = "PLANNED";
+        // public Status status { get; set; } = Status.PLANNED;
     }
 }
-

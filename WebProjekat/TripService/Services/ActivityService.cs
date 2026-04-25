@@ -24,7 +24,7 @@ namespace TripService.Services
                 name = dto.Name,
                 date = dto.Date,
                 time = dto.Time,
-                status = dto.status,
+                status = dto.status.ToString(),
                 estimatedCost = dto.EstimatedCost,
                 travelPlanId = travelId
             };
@@ -75,7 +75,7 @@ namespace TripService.Services
                 activity.estimatedCost = dto.EstimatedCost ?? activity.estimatedCost;
                 activity.time = dto.Time ?? activity.time;
                 activity.description = dto.Description ?? activity.description;
-                activity.status = dto.status ?? activity.status;
+                activity.status = dto.status?.ToString() ?? activity.status;
 
                 await context.SaveChangesAsync();
                 return true;

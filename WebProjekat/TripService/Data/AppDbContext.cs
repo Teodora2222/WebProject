@@ -9,6 +9,8 @@ namespace TripService.Data
         public DbSet<TravelPlan> TravelPlans { get; set; }
         public DbSet<Destination> Destinations { get; set; }
 
+        public DbSet<ChecklistItem> ChecklistItems { get; set; }
+
         public DbSet<Activity> Activities { get; set; }
     }
 }

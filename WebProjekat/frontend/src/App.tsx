@@ -8,6 +8,11 @@ import { EditTripPage } from "./pages/EditTravelPlan";
 import { AdminPage } from "./pages/AdminPage";
 import { UserRole } from "./enums/UserRole";
 import { UserApi } from "./api/users/UserApi";
+import { NewActivityPage } from "./pages/NewActivityPage";
+import { EditActivityPage } from "./pages/EditActivityPage";
+import { EditDestinationPage } from "./pages/EditDestinationPage";
+import { NewDestinationPage } from "./pages/NewDestinationPage";
+import { TripDetailPage } from "./pages/TripDeatilPage";
 
 const usersApi = new UserApi();
 
@@ -28,14 +33,19 @@ export default function App() {
         <Route path="/trips/:id/edit" element={
           isAuthenticated ? <EditTripPage /> : <Navigate to="/" />
         } />
-        <Route path="/trips/:id"
-          element={isAuthenticated ? <EditTripPage /> : <Navigate to="/" />}
-        />
+       
         <Route path="/admin" element={
           isAuthenticated && user?.role === UserRole.ADMIN
             ? <AdminPage />
             : <Navigate to="/" />
         } />
+
+        <Route path="/trips/:id" element={isAuthenticated ? <TripDetailPage /> : <Navigate to="/" />} />
+        <Route path="/trips/:id/destinations/new" element={isAuthenticated ? <NewDestinationPage /> : <Navigate to="/" />} />
+        <Route path="/trips/:id/destinations/:destId/edit" element={isAuthenticated ? <EditDestinationPage /> : <Navigate to="/" />} />
+        <Route path="/trips/:id/activities/new" element={isAuthenticated ? <NewActivityPage /> : <Navigate to="/" />} />
+        <Route path="/trips/:id/activities/:actId/edit" element={isAuthenticated ? <EditActivityPage /> : <Navigate to="/" />} />
+
       </Routes>
   );
 }
