@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TripService.Domain.DTOs;
+using TripService.Domain.Enum;
 using TripService.Domain.Services;
 using TripService.Services;
 
@@ -12,10 +13,24 @@ namespace TripService.Controllers
     public class CheckListItemController : ControllerBase
     {
         private ICheckListItemService checkListItemService;
+        private IShareService shareService;
 
-        public CheckListItemController(ICheckListItemService checkListItemService)
+        public CheckListItemController(ICheckListItemService checkListItemService, IShareService shareService)
         {
             this.checkListItemService = checkListItemService;
+            this.shareService = shareService;
+        }
+
+        private async Task<bool> HasEditPermission()
+        {
+            var token = Request.Headers["x-share-token"].FirstOrDefault();
+
+            if (token == null)
+                return true;
+
+            var permission = await shareService.GetPermissionFromToken(token);
+
+            return permission == SharePermission.EDIT;
         }
 
         [HttpGet]
@@ -37,6 +52,9 @@ namespace TripService.Controllers
         {
             try
             {
+                if (!await HasEditPermission())
+                    return Forbid("VIEW only");
+
                 var result = await checkListItemService.CreateCheckListItem(travelPlanId,dto);
                 return Ok(result);
             }
@@ -51,6 +69,9 @@ namespace TripService.Controllers
         {
             try
             {
+                if (!await HasEditPermission())
+                    return Forbid("VIEW only");
+
                 var result = await checkListItemService.DeleteCheckListItem(id, travelPlanId);
                 if (!result)
                     return NotFound(new { success = false, message = "Check List Item not found" });
@@ -68,6 +89,9 @@ namespace TripService.Controllers
         {
             try
             {
+                if (!await HasEditPermission())
+                    return Forbid("VIEW only");
+
                 var result = await checkListItemService.ToggleCheckListItem(id, dto.IsCompleted,travelPlanId);
                 if (!result)
                     return NotFound(new { success = false, message = "Check List Item not found" });

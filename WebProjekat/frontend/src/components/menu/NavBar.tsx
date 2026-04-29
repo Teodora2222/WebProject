@@ -14,69 +14,60 @@ export function NavBar() {
   };
 
   return (
-  <nav className="w-full bg-white/10 backdrop-blur-lg shadow-md">
+    <nav className="sticky top-0 z-50 bg-gradient-to-r from-[#022c22]/90 to-[#020617]/90 backdrop-blur-xl border-b border-white/10">
+      <div className="max-w-6xl mx-auto flex items-center justify-between px-6 py-4">
 
-    <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-3">
-
-      <div
-        className="font-bold text-xl cursor-pointer text-white"
-        onClick={() => navigate("/home")}
-      >
-        ✈️ Travel Planner
-      </div>
-
-      <div className="flex gap-8 text-white font-medium">
-        <span
-          onClick={() => navigate("/home")}
-          className="cursor-pointer hover:text-green-300 transition"
-        >
-          Home
-        </span>
-
-        <span
-          onClick={() => navigate("/trips/new")}
-          className="cursor-pointer hover:text-green-300 transition"
-        >
-          Destination
-        </span>
-
-        {user?.role === UserRole.ADMIN && (
-          <span
-            onClick={() => navigate("/admin")}
-            className="cursor-pointer hover:text-red-300 transition"
-          >
-            Admin
-          </span>
-        )}
-      </div>
-
-      <div className="relative">
+        {/* LOGO */}
         <div
-          onClick={() => setIsOpen(!isOpen)}
-          className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-green-600 flex items-center justify-center text-white cursor-pointer font-semibold"
+          onClick={() => navigate("/home")}
+          className="flex items-center gap-3 cursor-pointer"
         >
-          {user?.email?.charAt(0).toUpperCase()}
+          <div className="w-9 h-9 rounded-xl bg-green-500 flex items-center justify-center text-black font-bold">
+            ✈
+          </div>
+          <span className="text-white font-semibold text-lg">
+            Travel Planner
+          </span>
         </div>
 
-        {isOpen && (
-          <div className="absolute right-0 mt-2 w-48 bg-white/90 backdrop-blur rounded-xl shadow-lg p-2 text-sm">
+        {/* PRAZNO - balans layout */}
+        <div className="flex-1" />
 
-            <p className="text-gray-800 px-2 mb-2 truncate">
-              {user?.email}
-            </p>
-
-            <button
-              onClick={handleLogout}
-              className="w-full text-left text-red-500 px-2 py-2 hover:bg-gray-100 rounded-lg transition"
-            >
-              Logout
-            </button>
-
+        {/* USER */}
+        <div className="relative">
+          <div
+            onClick={() => setIsOpen(!isOpen)}
+            className="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center text-black font-semibold cursor-pointer"
+          >
+            {user?.email?.charAt(0).toUpperCase()}
           </div>
-        )}
-      </div>
 
-    </div>
-  </nav>
-);
+          {isOpen && (
+            <div className="absolute right-0 mt-3 w-56 bg-[#020617] border border-white/10 rounded-xl shadow-xl p-2 text-sm">
+
+              <p className="text-white/40 px-3 py-2 text-xs border-b border-white/10 mb-1">
+                {user?.email}
+              </p>
+
+              {user?.role === UserRole.ADMIN && (
+                <button
+                  onClick={() => navigate("/admin")}
+                  className="w-full text-left px-3 py-2 hover:bg-white/5 rounded-lg text-yellow-400"
+                >
+                  Admin Panel
+                </button>
+              )}
+
+              <button
+                onClick={handleLogout}
+                className="w-full text-left px-3 py-2 hover:bg-white/5 rounded-lg text-red-400 mt-1 border-t border-white/10"
+              >
+                Logout
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    </nav>
+  );
 }

@@ -13,6 +13,9 @@ import { EditActivityPage } from "./pages/EditActivityPage";
 import { EditDestinationPage } from "./pages/EditDestinationPage";
 import { NewDestinationPage } from "./pages/NewDestinationPage";
 import { TripDetailPage } from "./pages/TripDeatilPage";
+import { NewExpensePage } from "./pages/NewExpensePage";
+import { EditExpensePage } from "./pages/EditExpensePage";
+import { SharedPlanPage } from "./pages/SharedPlanPage";
 
 const usersApi = new UserApi();
 
@@ -45,7 +48,15 @@ export default function App() {
         <Route path="/trips/:id/destinations/:destId/edit" element={isAuthenticated ? <EditDestinationPage /> : <Navigate to="/" />} />
         <Route path="/trips/:id/activities/new" element={isAuthenticated ? <NewActivityPage /> : <Navigate to="/" />} />
         <Route path="/trips/:id/activities/:actId/edit" element={isAuthenticated ? <EditActivityPage /> : <Navigate to="/" />} />
-
+        <Route path="/trips/:id/expenses/new" element={
+            isAuthenticated ? <NewExpensePage /> : <Navigate to="/" />
+        } />
+        
+      <Route path="/trips/:id/expenses/:expId/edit" element={
+        isAuthenticated ? <EditExpensePage /> : <Navigate to="/" />
+      } />
+      <Route path="/shared/:token" element={<SharedPlanPage />} />
+      
       </Routes>
   );
 }

@@ -19,6 +19,8 @@ builder.Services.AddScoped<IActivityService, ActivityService>();
 
 builder.Services.AddScoped<ICheckListItemService, CheckListItemService>();
 
+builder.Services.AddScoped<IShareService, ShareService>();
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {

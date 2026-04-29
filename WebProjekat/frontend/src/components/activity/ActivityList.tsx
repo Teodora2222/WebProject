@@ -77,8 +77,11 @@ export function ActivitiesList({ activityApi }: Props) {
         </div>
         <button
           onClick={() => navigate(`/trips/${travelPlanId}/activities/new`)}
-          className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-xl font-bold transition-all hover:scale-105 shadow-lg shadow-green-500/20 text-sm"
-        >
+          className="px-5 py-2 rounded-lg text-sm font-medium
+bg-green-500/20 text-green-300
+border border-green-400/30
+hover:bg-green-500/30 hover:border-green-300
+transition"  >
           + Add Activity
         </button>
       </div>

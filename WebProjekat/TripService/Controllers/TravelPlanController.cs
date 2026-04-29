@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TripService.Domain.DTOs;
+using TripService.Domain.Enum;
 using TripService.Domain.Services;
 
 namespace TripService.Controllers
@@ -12,10 +13,24 @@ namespace TripService.Controllers
     public class TravelPlanController : ControllerBase
     {
         private ITravelPlanService travelPlanService;
+        private IShareService shareService;
 
-        public TravelPlanController(ITravelPlanService travelPlanService)
+        public TravelPlanController(ITravelPlanService travelPlanService, IShareService shareService)
         {
             this.travelPlanService = travelPlanService;
+            this.shareService = shareService;
+        }
+
+        private async Task<bool> HasEditPermission()
+        {
+            var token = Request.Headers["x-share-token"].FirstOrDefault();
+
+            if (token == null)
+                return true;
+
+            var permission = await shareService.GetPermissionFromToken(token);
+
+            return permission == SharePermission.EDIT;
         }
 
         private int GetUserId()
@@ -61,6 +76,9 @@ namespace TripService.Controllers
         {
             try
             {
+                if (!await HasEditPermission())
+                    return Forbid("VIEW only");
+
                 var userId = GetUserId();
                 var result = await travelPlanService.deleteTravelPlan(id,userId);
                 if (!result)
@@ -80,6 +98,9 @@ namespace TripService.Controllers
         {
             try
             {
+                if (!await HasEditPermission())
+                    return Forbid("VIEW only");
+
                 var userId = GetUserId();
                 var result = await travelPlanService.updateTravelPlan(id,dto,userId);
                 return Ok(new { success = true, message = "Travel plan updated" });
@@ -95,6 +116,9 @@ namespace TripService.Controllers
         {
             try
             {
+                if (!await HasEditPermission())
+                    return Forbid("VIEW only");
+
                 var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
                 if (userIdClaim == null)
                     return Unauthorized(new { success = false, message = "Invalid token" });

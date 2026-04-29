@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using TripService.Domain.DTOs;
+using TripService.Domain.Enum;
 using TripService.Domain.Services;
 using TripService.Services;
 
@@ -13,10 +14,24 @@ namespace TripService.Controllers
     public class DestinationController : ControllerBase
     {
         private IDestinationService destinationService;
+        private IShareService shareService;
 
-        public DestinationController(IDestinationService destinationService)
+        public DestinationController(IDestinationService destinationService, IShareService shareService)
         {
             this.destinationService = destinationService;
+            this.shareService = shareService;
+        }
+
+        private async Task<bool> HasEditPermission()
+        {
+            var token = Request.Headers["x-share-token"].FirstOrDefault();
+
+            if (token == null)
+                return true;
+
+            var permission = await shareService.GetPermissionFromToken(token);
+
+            return permission == SharePermission.EDIT;
         }
 
         [HttpGet]
@@ -38,6 +53,9 @@ namespace TripService.Controllers
         {
             try
             {
+                if (!await HasEditPermission())
+                    return Forbid("VIEW only");
+
                 var result = await destinationService.createDestination(dto, travelPlanId);
                 return CreatedAtAction(nameof(getDestination), new { travelPlanId, id = result.id }, result);
             }
@@ -52,6 +70,9 @@ namespace TripService.Controllers
         {
             try
             {
+                if (!await HasEditPermission())
+                    return Forbid("VIEW only");
+
                 var result = await destinationService.deleteDestination(id);
                 if (!result)
                     return NotFound(new { success = false, message = "Destination not found" });
@@ -69,6 +90,9 @@ namespace TripService.Controllers
         {
             try
             {
+                if (!await HasEditPermission())
+                    return Forbid("VIEW only");
+
                 var result = await destinationService.updateDestination(id, dto);
                 if (!result)
                     return NotFound(new { success = false, message = "Destination not found" });

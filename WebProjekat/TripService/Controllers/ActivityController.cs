@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TripService.Domain.DTOs;
+using TripService.Domain.Enum;
 using TripService.Domain.Services;
 using TripService.Services;
 
@@ -12,10 +13,24 @@ namespace TripService.Controllers
     public class ActivityController : ControllerBase
     {
         private IActivityService activityService;
+        private IShareService shareService;
 
-        public ActivityController(IActivityService activityService)
+        public ActivityController(IActivityService activityService,IShareService shareService)
         {
             this.activityService = activityService;
+            this.shareService = shareService;
+        }
+
+        private async Task<bool> HasEditPermission()
+        {
+            var token = Request.Headers["x-share-token"].FirstOrDefault();
+
+            if (token == null)
+                return true;
+
+            var permission = await shareService.GetPermissionFromToken(token);
+
+            return permission == SharePermission.EDIT;
         }
 
         [HttpGet]
@@ -51,6 +66,9 @@ namespace TripService.Controllers
         {
             try
             {
+                if (!await HasEditPermission())
+                    return Forbid("VIEW only");
+
                 var result = await activityService.createActivity(dto, travelPlanId);
                 return CreatedAtAction(nameof(getActivity), new { travelPlanId, id = result.id }, result);
             }
@@ -65,6 +83,9 @@ namespace TripService.Controllers
         {
             try
             {
+                if (!await HasEditPermission())
+                    return Forbid("VIEW only");
+
                 var result = await activityService.deleteActivity(id);
                 if (!result)
                     return NotFound(new { success = false, message = "Activity not found" });
@@ -82,6 +103,9 @@ namespace TripService.Controllers
         {
             try
             {
+                if (!await HasEditPermission())
+                    return Forbid("VIEW only");
+
                 var result = await activityService.updateActivity(id, dto);
                 if (!result)
                     return NotFound(new { success = false, message = "Activity not found" });
