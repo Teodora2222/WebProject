@@ -9,7 +9,6 @@ using TripService.Domain.Services;
 namespace TripService.Controllers
 {
     [ApiController]
-    [Authorize]
     [Route("/api/travel-plans/{travelPlanId}/shares")]
     public class ShareController : ControllerBase
     {
@@ -23,6 +22,7 @@ namespace TripService.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> SharePlan(int travelPlanId, [FromBody] CreateShareDto dto)
         {
             var result = await shareService.CreateShare(travelPlanId, dto);
@@ -33,8 +33,7 @@ namespace TripService.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GetSharedPlan(string token)
         {
-            var share = await context.SharedTravelPlans
-                .FirstOrDefaultAsync(s => s.Token == token);
+            var share = await shareService.GetShareByToken(token);
 
             if (share == null)
                 return NotFound(new { message = "Invalid link" });

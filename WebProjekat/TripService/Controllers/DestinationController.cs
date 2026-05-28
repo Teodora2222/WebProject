@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using TripService.Domain.DTOs;
 using TripService.Domain.Enum;
+using TripService.Domain.Helpers;
 using TripService.Domain.Services;
 using TripService.Services;
 
@@ -22,23 +23,16 @@ namespace TripService.Controllers
             this.shareService = shareService;
         }
 
-        private async Task<bool> HasEditPermission()
-        {
-            var token = Request.Headers["x-share-token"].FirstOrDefault();
-
-            if (token == null)
-                return true;
-
-            var permission = await shareService.GetPermissionFromToken(token);
-
-            return permission == SharePermission.EDIT;
-        }
 
         [HttpGet]
         public async Task<IActionResult> getAllDestinations(int travelPlanId)
         {
             try
             {
+                if (!await SharePermissionHelper.HasViewPermission(Request, User, shareService))
+                {
+                    return Unauthorized();
+                }
                 var result = await destinationService.getAllDestinastons(travelPlanId);
                 return Ok(result);
             }
@@ -53,9 +47,10 @@ namespace TripService.Controllers
         {
             try
             {
-                if (!await HasEditPermission())
+                if (!await SharePermissionHelper.HasEditPermission(Request, User, shareService))
+                {
                     return Forbid("VIEW only");
-
+                }
                 var result = await destinationService.createDestination(dto, travelPlanId);
                 return CreatedAtAction(nameof(getDestination), new { travelPlanId, id = result.id }, result);
             }
@@ -70,9 +65,10 @@ namespace TripService.Controllers
         {
             try
             {
-                if (!await HasEditPermission())
+                if (!await SharePermissionHelper.HasEditPermission(Request, User, shareService))
+                {
                     return Forbid("VIEW only");
-
+                }
                 var result = await destinationService.deleteDestination(id);
                 if (!result)
                     return NotFound(new { success = false, message = "Destination not found" });
@@ -90,9 +86,10 @@ namespace TripService.Controllers
         {
             try
             {
-                if (!await HasEditPermission())
+                if (!await SharePermissionHelper.HasEditPermission(Request, User, shareService))
+                {
                     return Forbid("VIEW only");
-
+                }
                 var result = await destinationService.updateDestination(id, dto);
                 if (!result)
                     return NotFound(new { success = false, message = "Destination not found" });
@@ -109,6 +106,10 @@ namespace TripService.Controllers
         {
             try
             {
+                if (!await SharePermissionHelper.HasViewPermission(Request, User, shareService))
+                {
+                    return Unauthorized();
+                }
                 var result = await destinationService.getDestination(id);
                 if (result == null)
                     return NotFound(new { success = false, message = "Destination not found" });

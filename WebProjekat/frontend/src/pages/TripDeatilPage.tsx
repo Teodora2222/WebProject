@@ -65,23 +65,53 @@ transition flex-col bg-gradient-to-br from-[#020617] via-[#064e3b] to-[#020617] 
     {trip && (
   <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
 
-    <div className="flex items-center justify-between mb-4">
-      <h2 className="text-sm text-white/50 uppercase tracking-wide">
-        Trip Information
-      </h2>
+   
+      <div className="flex items-start justify-between mb-6">
 
-      <button
-        onClick={() => navigate(`/trips/${id}/edit`)}
-        className="px-6 py-2 rounded-lg text-sm font-medium bg-gradient-to-r from-yellow-400/20 to-orange-400/20
-            text-yellow-200 border border-yellow-400/30 hover:from-yellow-400/30 hover:to-orange-400/30
-            hover:border-yellow-300 hover:shadow-[0_0_12px_rgba(250,204,21,0.4)] transition-all duration-200"
-          >
-          Edit
-      </button>
-      <button onClick={() => setShowShare(true)} className="px-4 py-2 rounded-lg border border-white/20 text-white/70 hover:bg-white/10 text-sm transition">
-          🔗 Share
-      </button>
-    </div>
+  <h2 className="text-sm text-white/40 uppercase tracking-[0.2em]">
+    Trip Information
+  </h2>
+
+  <div className="flex flex-col gap-3">
+
+    <button
+      onClick={() => navigate(`/trips/${id}/edit`)}
+      className="
+        min-w-[140px]
+        px-6 py-2.5 rounded-xl
+        text-sm font-semibold
+        bg-gradient-to-r from-yellow-400/15 to-orange-400/15
+        text-yellow-200
+        border border-yellow-400/30
+        hover:from-yellow-400/25 hover:to-orange-400/25
+        hover:border-yellow-300
+        hover:shadow-[0_0_14px_rgba(250,204,21,0.35)]
+        transition-all duration-200
+      "
+    >
+      Edit Trip
+    </button>
+
+    <button
+      onClick={() => setShowShare(true)}
+      className="
+        min-w-[140px]
+        px-6 py-2.5 rounded-xl
+        text-sm font-medium
+        bg-white/[0.03]
+        border border-white/10
+        text-white/70
+        hover:bg-white/[0.06]
+        hover:text-white
+        hover:border-white/20
+        transition-all duration-200
+      "
+    >
+      🔗 Share Trip
+    </button>
+
+  </div>
+</div>
 
     <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
 

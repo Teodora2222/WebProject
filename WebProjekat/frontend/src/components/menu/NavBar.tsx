@@ -30,10 +30,8 @@ export function NavBar() {
           </span>
         </div>
 
-        {/* PRAZNO - balans layout */}
         <div className="flex-1" />
 
-        {/* USER */}
         <div className="relative">
           <div
             onClick={() => setIsOpen(!isOpen)}

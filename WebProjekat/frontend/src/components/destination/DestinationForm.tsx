@@ -2,12 +2,14 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import type { IDestinationApi } from "../../api/destination/IDestinationApi";
+import type { ITravelPlanApi } from "../../api/travel/ITravelPlanApi";
 
 interface Props {
   destinationApi: IDestinationApi;
+  travelPlanApi: ITravelPlanApi;
 }
 
-export function DestinationForm({ destinationApi }: Props) {
+export function DestinationForm({ destinationApi ,travelPlanApi}: Props) {
   const { id: travelPlanId, destId } = useParams();
   const navigate = useNavigate();
   const isEdit = Boolean(destId);
@@ -20,6 +22,17 @@ export function DestinationForm({ destinationApi }: Props) {
   const [note, setNote] = useState("");
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(isEdit);
+  const [tripStart, setTripStart] = useState("");
+  const [tripEnd, setTripEnd] = useState("");
+
+  useEffect(() => {
+  if (travelPlanId) {
+    travelPlanApi.getTravelPlan(Number(travelPlanId)).then((trip) => {
+      setTripStart(trip.startDate.substring(0, 10));
+      setTripEnd(trip.endDate.substring(0, 10));
+    });
+  }
+}, [travelPlanId]);
 
   useEffect(() => {
     if (isEdit && destId && travelPlanId) {
@@ -49,6 +62,15 @@ export function DestinationForm({ destinationApi }: Props) {
       toast.error("Departure cannot be before arrival.");
       return;
     }
+    if (startDate && (startDate < tripStart || startDate > tripEnd)) {
+  toast.error("Arrival date must be inside trip dates.");
+  return;
+}
+
+if (endDate && (endDate < tripStart || endDate > tripEnd)) {
+  toast.error("Departure date must be inside trip dates.");
+  return;
+}
 
     setLoading(true);
     try {
@@ -130,6 +152,8 @@ export function DestinationForm({ destinationApi }: Props) {
                   type="date"
                   className={inputClass}
                   value={startDate}
+                  min={tripStart}
+                  max={tripEnd}
                   onChange={(e) => setStartDate(e.target.value)}
                 />
               </div>
@@ -139,6 +163,8 @@ export function DestinationForm({ destinationApi }: Props) {
                   type="date"
                   className={inputClass}
                   value={endDate}
+                  min={tripStart}
+                  max={tripEnd}
                   onChange={(e) => setEndDate(e.target.value)}
                 />
               </div>

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TripService.Domain.DTOs;
 using TripService.Domain.Enum;
+using TripService.Domain.Helpers;
 using TripService.Domain.Services;
 
 namespace TripService.Controllers
@@ -21,18 +22,6 @@ namespace TripService.Controllers
             this.shareService = shareService;
         }
 
-        private async Task<bool> HasEditPermission()
-        {
-            var token = Request.Headers["x-share-token"].FirstOrDefault();
-
-            if (token == null)
-                return true;
-
-            var permission = await shareService.GetPermissionFromToken(token);
-
-            return permission == SharePermission.EDIT;
-        }
-
         private int GetUserId()
         {
             return int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
@@ -43,6 +32,10 @@ namespace TripService.Controllers
         {
             try
             {
+                if (!await SharePermissionHelper.HasViewPermission(Request, User, shareService))
+                {
+                    return Unauthorized();
+                }
                 var userId = GetUserId();
                 var result = await travelPlanService.getAllTravelPlans(userId);
                 return Ok(result);
@@ -58,6 +51,10 @@ namespace TripService.Controllers
         {
             try
             {
+                if (!await SharePermissionHelper.HasViewPermission(Request, User, shareService))
+                {
+                    return Unauthorized();
+                }
                 var userId = GetUserId();
                 var result = await travelPlanService.getTravelPlan(id,userId);
                 if (result == null)
@@ -76,8 +73,10 @@ namespace TripService.Controllers
         {
             try
             {
-                if (!await HasEditPermission())
+                if (!await SharePermissionHelper.HasEditPermission(Request, User, shareService))
+                {
                     return Forbid("VIEW only");
+                }
 
                 var userId = GetUserId();
                 var result = await travelPlanService.deleteTravelPlan(id,userId);
@@ -98,8 +97,10 @@ namespace TripService.Controllers
         {
             try
             {
-                if (!await HasEditPermission())
+                if (!await SharePermissionHelper.HasEditPermission(Request, User, shareService))
+                {
                     return Forbid("VIEW only");
+                }
 
                 var userId = GetUserId();
                 var result = await travelPlanService.updateTravelPlan(id,dto,userId);
@@ -116,8 +117,10 @@ namespace TripService.Controllers
         {
             try
             {
-                if (!await HasEditPermission())
+                if (!await SharePermissionHelper.HasEditPermission(Request, User, shareService))
+                {
                     return Forbid("VIEW only");
+                }
 
                 var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
                 if (userIdClaim == null)

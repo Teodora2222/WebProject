@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using TripService.Domain.DTOs;
 using TripService.Domain.Enum;
+using TripService.Domain.Helpers;
 using TripService.Domain.Services;
 using TripService.Services;
 
@@ -21,23 +22,15 @@ namespace TripService.Controllers
             this.shareService = shareService;
         }
 
-        private async Task<bool> HasEditPermission()
-        {
-            var token = Request.Headers["x-share-token"].FirstOrDefault();
-
-            if (token == null)
-                return true;
-
-            var permission = await shareService.GetPermissionFromToken(token);
-
-            return permission == SharePermission.EDIT;
-        }
-
         [HttpGet]
         public async Task<IActionResult> getAllItems(int travelPlanId)
         {
             try
             {
+                if (!await SharePermissionHelper.HasViewPermission(Request, User, shareService))
+                {
+                    return Unauthorized();
+                }
                 var result = await checkListItemService.GetAllCheckListItems(travelPlanId);
                 return Ok(result);
             }
@@ -52,8 +45,10 @@ namespace TripService.Controllers
         {
             try
             {
-                if (!await HasEditPermission())
+                if (!await SharePermissionHelper.HasEditPermission(Request, User, shareService))
+                {
                     return Forbid("VIEW only");
+                }
 
                 var result = await checkListItemService.CreateCheckListItem(travelPlanId,dto);
                 return Ok(result);
@@ -69,8 +64,10 @@ namespace TripService.Controllers
         {
             try
             {
-                if (!await HasEditPermission())
+                if (!await SharePermissionHelper.HasEditPermission(Request, User, shareService))
+                {
                     return Forbid("VIEW only");
+                }
 
                 var result = await checkListItemService.DeleteCheckListItem(id, travelPlanId);
                 if (!result)
@@ -89,9 +86,10 @@ namespace TripService.Controllers
         {
             try
             {
-                if (!await HasEditPermission())
+                if (!await SharePermissionHelper.HasEditPermission(Request, User, shareService))
+                {
                     return Forbid("VIEW only");
-
+                }
                 var result = await checkListItemService.ToggleCheckListItem(id, dto.IsCompleted,travelPlanId);
                 if (!result)
                     return NotFound(new { success = false, message = "Check List Item not found" });

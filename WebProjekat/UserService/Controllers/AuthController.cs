@@ -27,9 +27,14 @@ namespace UserService.Controllers
                     return Unauthorized(new { success = false, message = "Invalid credentials" });
                 return Ok(new { success = true, token = token });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return StatusCode(500, new { success = false, message = "Internal server error" });
+                return StatusCode(500, new
+                {
+                    success = false,
+                    message = ex.Message,
+                    inner = ex.InnerException?.Message
+                });
             }
         }
 
@@ -45,9 +50,14 @@ namespace UserService.Controllers
 
                 return Ok(new { success = true, message = "Registration successful" });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return StatusCode(500, new { success = false, message = "Internal server error" });
+                return StatusCode(500, new
+                {
+                    success = false,
+                    message = ex.Message,
+                    inner = ex.InnerException?.Message
+                });
             }
         }
     }

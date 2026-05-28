@@ -38,6 +38,12 @@ namespace TripService.Services
             };
         }
 
+        public async Task<SharedTravelPlan?> GetShareByToken(string token)
+        {
+            return await context.SharedTravelPlans
+                .FirstOrDefaultAsync(s => s.Token == token);
+        }
+
         public async Task<SharePermission?> GetPermissionFromToken(string token)
         {
             var share = await context.SharedTravelPlans

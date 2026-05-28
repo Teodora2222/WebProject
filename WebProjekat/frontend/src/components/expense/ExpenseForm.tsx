@@ -3,12 +3,14 @@ import { ExpenseCategory } from "../../enums/ExpenseCategory";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import type { IExpenseApi } from "../../api/expense/IExpenseApi";
+import type { ITravelPlanApi } from "../../api/travel/ITravelPlanApi";
 
 interface Props {
   expenseApi: IExpenseApi;
+  travelPlanApi: ITravelPlanApi;
 }
 
-export function ExpenseForm({ expenseApi }: Props) {
+export function ExpenseForm({ expenseApi,travelPlanApi }: Props) {
   const { id: travelPlanId, expId } = useParams();
   const navigate = useNavigate();
   const isEdit = Boolean(expId);
@@ -20,8 +22,20 @@ export function ExpenseForm({ expenseApi }: Props) {
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const [tripStart, setTripStart] = useState("");
+  const [tripEnd, setTripEnd] = useState("");
+
   const inputClass =
     "w-full px-5 py-4 rounded-xl bg-white/10 text-white placeholder-white/40 outline-none focus:ring-2 focus:ring-green-400";
+
+    useEffect(() => {
+  if (travelPlanId) {
+    travelPlanApi.getTravelPlan(Number(travelPlanId)).then((trip) => {
+      setTripStart(trip.startDate.substring(0, 10));
+      setTripEnd(trip.endDate.substring(0, 10));
+    });
+  }
+}, [travelPlanId]);
 
     useEffect(() => {
   if (isEdit && expId && travelPlanId) {
@@ -42,6 +56,16 @@ export function ExpenseForm({ expenseApi }: Props) {
       toast.error("Fill required fields");
       return;
     }
+
+    if (Number(amount) <= 0) {
+  toast.error("Amount must be greater than 0.");
+  return;
+}
+
+if (date < tripStart || date > tripEnd) {
+  toast.error(`Expense date must be between ${tripStart} and ${tripEnd}.`);
+  return;
+}
 
     try {
       setLoading(true);
@@ -76,7 +100,14 @@ export function ExpenseForm({ expenseApi }: Props) {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#020617] via-[#064e3b] to-[#020617]">
 
       <div className="w-full max-w-xl bg-white/10 rounded-3xl p-8 border border-white/10">
-
+         <button
+          onClick={() => navigate(-1)}
+          className="mb-6 flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 border border-white/20 text-white hover:bg-white/20 transition-all duration-200"
+        >
+          <span className="text-lg">←</span>
+          <span className="text-sm">Back</span>
+        </button>
+        
         <h1 className="text-2xl font-bold text-white mb-6">
           {isEdit ? "Edit Expense" : "Add Expense"}
         </h1>
@@ -115,6 +146,8 @@ export function ExpenseForm({ expenseApi }: Props) {
             type="date"
             className={inputClass}
             value={date}
+            min={tripStart}
+            max={tripEnd}
             onChange={(e) => setDate(e.target.value)}
           />
 

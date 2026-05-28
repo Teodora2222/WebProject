@@ -32,18 +32,23 @@ namespace UserService.Services
                 return null;
 
             var claims = new[]
-{
-    new Claim("sub", existingUser.id.ToString()),
-    new Claim("email", existingUser.email),
-    new Claim("role", existingUser.role)
-};
+            {
+                new Claim("sub", existingUser.id.ToString()),
+                new Claim("email", existingUser.email),
+                new Claim("role", existingUser.role)
+            };
+
+            var jwtKey = configuration["Jwt:Key"]
+                ?? "TvojTajniKljucKojiMoraBitiDugacak32Karaktera!";
 
             var key = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(configuration["Jwt:Key"]));
+                Encoding.UTF8.GetBytes(jwtKey));
+
+            var jwtIssuer = configuration["Jwt:Issuer"]?? "TravelPlannerApp";
 
             var token = new JwtSecurityToken(
-                issuer: configuration["Jwt:Issuer"],
-                audience: configuration["Jwt:Issuer"],
+                issuer: jwtIssuer,
+                audience: jwtIssuer,
                 claims: claims,
                 expires: DateTime.UtcNow.AddHours(24),
                 signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256)

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using TripService.Domain.DTOs;
 using TripService.Domain.Enum;
+using TripService.Domain.Helpers;
 using TripService.Domain.Services;
 using TripService.Services;
 
@@ -21,23 +22,15 @@ namespace TripService.Controllers
             this.shareService = shareService;
         }
 
-        private async Task<bool> HasEditPermission()
-        {
-            var token = Request.Headers["x-share-token"].FirstOrDefault();
-
-            if (token == null)
-                return true;
-
-            var permission = await shareService.GetPermissionFromToken(token);
-
-            return permission == SharePermission.EDIT;
-        }
-
         [HttpGet]
         public async Task<IActionResult> getAllActivities(int travelPlanId)
         {
             try
             {
+                if (!await SharePermissionHelper.HasViewPermission(Request, User, shareService))
+                {
+                    return Unauthorized();
+                }
                 var result = await activityService.getAllActivities(travelPlanId);
                 return Ok(result);
             }
@@ -52,6 +45,10 @@ namespace TripService.Controllers
         {
             try
             {
+                if (!await SharePermissionHelper.HasViewPermission(Request, User, shareService))
+                {
+                    return Unauthorized();
+                }
                 var result = await activityService.getActivitiesByDate(travelPlanId, date);
                 return Ok(result);
             }
@@ -66,8 +63,10 @@ namespace TripService.Controllers
         {
             try
             {
-                if (!await HasEditPermission())
+                if (!await SharePermissionHelper.HasEditPermission(Request,User,shareService))
+                {
                     return Forbid("VIEW only");
+                }
 
                 var result = await activityService.createActivity(dto, travelPlanId);
                 return CreatedAtAction(nameof(getActivity), new { travelPlanId, id = result.id }, result);
@@ -83,8 +82,10 @@ namespace TripService.Controllers
         {
             try
             {
-                if (!await HasEditPermission())
+                if (!await SharePermissionHelper.HasEditPermission(Request, User, shareService))
+                {
                     return Forbid("VIEW only");
+                }
 
                 var result = await activityService.deleteActivity(id);
                 if (!result)
@@ -103,8 +104,10 @@ namespace TripService.Controllers
         {
             try
             {
-                if (!await HasEditPermission())
+                if (!await SharePermissionHelper.HasEditPermission(Request, User, shareService))
+                {
                     return Forbid("VIEW only");
+                }
 
                 var result = await activityService.updateActivity(id, dto);
                 if (!result)
@@ -122,6 +125,11 @@ namespace TripService.Controllers
         {
             try
             {
+                if (!await SharePermissionHelper.HasViewPermission(Request,User,shareService))
+                {
+                    return Unauthorized();
+                }
+
                 var result = await activityService.getActivity(id);
                 if (result == null)
                     return NotFound(new { success = false, message = "Activity not found" });

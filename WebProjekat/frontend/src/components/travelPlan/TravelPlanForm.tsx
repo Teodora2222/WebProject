@@ -45,6 +45,13 @@ export function TravelPlanForm({ travelPlanApi }: Props) {
       toast.error("Please fill in all required fields.");
       return;
     }
+    const today = new Date();
+today.setHours(0,0,0,0);
+
+if (new Date(startDate) < today) {
+  toast.error("Trip cannot start in the past.");
+  return;
+}
     if (new Date(endDate) < new Date(startDate)) {
       toast.error("End date cannot be before start date.");
       return;

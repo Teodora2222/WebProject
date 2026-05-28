@@ -59,7 +59,7 @@ export function ShareModal({ travelPlanId, shareApi, onClose }: Props) {
                     : "border-white/10 text-white/50 hover:border-white/20"
                 }`}
               >
-                <p className="font-semibold">👁️ View only</p>
+                <p className="font-semibold"> View only</p>
                 <p className="text-xs mt-1 opacity-60">Can see the plan</p>
               </button>
               <button
@@ -70,7 +70,7 @@ export function ShareModal({ travelPlanId, shareApi, onClose }: Props) {
                     : "border-white/10 text-white/50 hover:border-white/20"
                 }`}
               >
-                <p className="font-semibold">✏️ Can edit</p>
+                <p className="font-semibold"> Can edit</p>
                 <p className="text-xs mt-1 opacity-60">Can modify the plan</p>
               </button>
             </div>

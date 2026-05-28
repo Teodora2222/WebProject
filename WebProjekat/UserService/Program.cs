@@ -1,23 +1,36 @@
+using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
+using Microsoft.ServiceFabric.Services.Runtime;
+using UserService;
 using UserService.Data;
 using UserService.Domain.Services;
 using UserService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Baza podataka
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+var port = Environment.GetEnvironmentVariable("Fabric_Endpoint_ServiceEndpoint") ?? "8275";
+builder.WebHost.UseUrls($"http://+:{port}");
 
-// Registracija servisa — Dependency Injection
+builder.Services.AddDbContext<AppDbContext>(options =>
+{
+    options.UseSqlServer(
+    "Server=TEODORA\\SQLEXPRESS01;Database=TravelPlannerDB;Trusted_Connection=True;TrustServerCertificate=True;");
+   
+    //var connStr = builder.Configuration.GetConnectionString("DefaultConnection")
+    //  ?? "Server=TEODORA\\SQLEXPRESS01;Database=TravelPlannerDB;Trusted_Connection=True;TrustServerCertificate=True;";
+    //options.UseSqlServer(connStr);
+});
+
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<IRegisterService, RegisterService>();
 builder.Services.AddScoped<IUserService, UserService.Services.UserService>();
 
-// JWT autentikacija
+var jwtKey = "TvojTajniKljucKojiMoraBitiDugacak32Karaktera!";
+var jwtIssuer = "TravelPlannerApp";
+
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -27,10 +40,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = builder.Configuration["Jwt:Issuer"],
-            ValidAudience = builder.Configuration["Jwt:Issuer"],
+            ValidIssuer = jwtIssuer,
+            ValidAudience = jwtIssuer,
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+                Encoding.UTF8.GetBytes(jwtKey))
         };
     });
 
@@ -40,26 +53,28 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowFrontend",
-        policy =>
-        {
-            policy.WithOrigins("http://localhost:5173")
-                  .AllowAnyHeader()
-                  .AllowAnyMethod();
-        });
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
 });
+
+Task.Run(async () =>
+{
+    await ServiceRuntime.RegisterServiceAsync("UserServiceType",
+        context => new UserServiceHost(context));
+});
+
 var app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI();
-
 app.UseRouting();
-
-app.UseCors("AllowFrontend"); 
-
+app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 
-app.Run();
+app.Run();  

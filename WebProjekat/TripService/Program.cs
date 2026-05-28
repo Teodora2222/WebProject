@@ -1,15 +1,25 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
+using Microsoft.ServiceFabric.Services.Runtime;
+using TripService;
 using TripService.Data;
 using TripService.Domain.Services;
 using TripService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var port = Environment.GetEnvironmentVariable("Fabric_Endpoint_ServiceEndpoint") ?? "8237";
+builder.WebHost.UseUrls($"http://+:{port}");
+
+
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+{
+    options.UseSqlServer(
+    "Server=TEODORA\\SQLEXPRESS01;Database=TravelPlannerDB;Trusted_Connection=True;TrustServerCertificate=True;");
+   
+});
 
 builder.Services.AddScoped<ITravelPlanService, TravelPlanService>();
 
@@ -21,6 +31,11 @@ builder.Services.AddScoped<ICheckListItemService, CheckListItemService>();
 
 builder.Services.AddScoped<IShareService, ShareService>();
 
+var jwtKey = builder.Configuration["Jwt:Key"]
+    ?? "TvojTajniKljucKojiMoraBitiDugacak32Karaktera!";
+var jwtIssuer = builder.Configuration["Jwt:Issuer"]
+    ?? "TravelPlannerApp";
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -30,12 +45,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-
-            ValidIssuer = builder.Configuration["Jwt:Issuer"],
-            ValidAudience = builder.Configuration["Jwt:Issuer"],
-
+            ValidIssuer = jwtIssuer,
+            ValidAudience = jwtIssuer,
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+                Encoding.UTF8.GetBytes(jwtKey))
         };
     });
 
@@ -85,6 +98,13 @@ builder.Services.AddCors(options =>
                   .AllowAnyMethod();
         });
 });
+
+Task.Run(async () =>
+{
+    await ServiceRuntime.RegisterServiceAsync("TripServiceType",
+        context => new TripServiceHost(context));
+});
+
 
 var app = builder.Build();
 
