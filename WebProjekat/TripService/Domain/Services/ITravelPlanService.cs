@@ -15,6 +15,7 @@ namespace TripService.Domain.Services
 
         public Task<bool> updateTravelPlan(int id,UpdateTravelPlanDto dto, int userId);
 
+        Task<List<TravelPlan>> getAllTravelPlansAdmin();
 
     }
 }

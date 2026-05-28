@@ -36,6 +36,14 @@ namespace TripService.Controllers
                 {
                     return Unauthorized();
                 }
+                var role = User.FindFirst(ClaimTypes.Role)?.Value;
+
+                if (role == "ADMIN")
+                {
+                    var allPlans = await travelPlanService.getAllTravelPlansAdmin();
+                    return Ok(allPlans);
+                }
+
                 var userId = GetUserId();
                 var result = await travelPlanService.getAllTravelPlans(userId);
                 return Ok(result);

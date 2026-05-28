@@ -52,6 +52,11 @@ namespace TripService.Services
             return true;
         }
 
+        public async Task<List<TravelPlan>> getAllTravelPlansAdmin()
+        {
+            return await context.TravelPlans.ToListAsync(); 
+        }
+
         public async Task<List<TravelPlan>> getAllTravelPlans(int userId)
         {
             return await context.TravelPlans

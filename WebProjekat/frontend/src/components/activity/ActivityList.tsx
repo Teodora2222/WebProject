@@ -53,11 +53,21 @@ export function ActivitiesList({ activityApi }: Props) {
     new Date(dateStr).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
 
   const grouped = activities.reduce((acc, act) => {
-    const key = act.date.substring(0, 10);
-    if (!acc[key]) acc[key] = [];
-    acc[key].push(act);
-    return acc;
-  }, {} as Record<string, ActivityDto[]>);
+  const key = act.date.substring(0, 10);
+
+  if (!acc[key]) acc[key] = [];
+
+  acc[key].push(act);
+
+  acc[key].sort((a, b) => {
+    if (!a.time) return 1;
+    if (!b.time) return -1;
+
+    return a.time.localeCompare(b.time);
+  });
+
+  return acc;
+}, {} as Record<string, ActivityDto[]>);
 
   const sortedDates = Object.keys(grouped).sort();
 
@@ -92,19 +102,26 @@ transition"  >
         </div>
       ) : (
         <div className="flex flex-col gap-6">
-          {sortedDates.map((date) => (
+          {sortedDates.map((date,index) => (
             <div key={date}>
-              <p className="text-white/40 text-xs font-bold uppercase tracking-widest mb-3">
-                📅 {formatDate(date)}
-              </p>
+             <div className="mb-4">
+  <p className="text-green-400 text-sm font-semibold tracking-wide">
+    DAY {index + 1}
+  </p>
+
+  <p className="text-white/40 text-xs font-bold uppercase tracking-widest mt-1">
+    📅 {formatDate(date)}
+  </p>
+</div>
               <div className="flex flex-col gap-3">
                 {grouped[date].map((act) => (
                   <div
                     key={act.id}
                     onClick={() => navigate(`/trips/${travelPlanId}/activities/${act.id}/edit`)}
-                    className="group bg-[#064e3b]/30 backdrop-blur-md border border-white/10 rounded-2xl p-5 hover:border-green-500/50 transition-all duration-300 cursor-pointer flex items-start justify-between gap-4"
+                    className="group bg-[#064e3b]/30 backdrop-blur-md border border-white/10 rounded-2xl p-5 hover:border-green-500/50 hover:shadow-[0_0_25px_rgba(34,197,94,0.15)] transition-all duration-300 cursor-pointer flex items-start justify-between gap-4"
                   >
-                    <div className="flex items-start gap-4">
+                    <div className="flex items-start gap-4 relative">
+                      <div className="absolute left-5 top-10 bottom-0 w-px bg-white/10" />
                       <div className="w-10 h-10 rounded-xl bg-green-500/20 flex items-center justify-center text-lg flex-shrink-0">
                         🎯
                       </div>

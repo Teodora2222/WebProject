@@ -16,7 +16,7 @@ builder.WebHost.UseUrls($"http://+:{port}");
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseSqlServer(
-    "Server=TEODORA\\SQLEXPRESS01;Database=TravelPlannerDB;Trusted_Connection=True;TrustServerCertificate=True;");
+    "Server=TEODORA\\SQLEXPRESS01;Database=UserPlannerDB;Trusted_Connection=True;TrustServerCertificate=True;");
    
     //var connStr = builder.Configuration.GetConnectionString("DefaultConnection")
     //  ?? "Server=TEODORA\\SQLEXPRESS01;Database=TravelPlannerDB;Trusted_Connection=True;TrustServerCertificate=True;";

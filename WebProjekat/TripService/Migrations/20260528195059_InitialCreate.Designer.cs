@@ -12,7 +12,7 @@ using TripService.Data;
 namespace TripService.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260526184149_InitialCreate")]
+    [Migration("20260528195059_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
