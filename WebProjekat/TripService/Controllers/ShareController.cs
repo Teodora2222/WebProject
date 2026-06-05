@@ -1,10 +1,11 @@
 ﻿using System.Fabric.Query;
+using Contract.Dtos.Trip;
+using Contract.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TripService.Data;
-using TripService.Domain.DTOs;
-using TripService.Domain.Services;
+
 
 namespace TripService.Controllers
 {

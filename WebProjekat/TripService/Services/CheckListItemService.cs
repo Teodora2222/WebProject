@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Contract.Dtos.Trip;
+using Contract.Services;
+using Microsoft.EntityFrameworkCore;
 using TripService.Data;
-using TripService.Domain.DTOs;
 using TripService.Domain.Models;
-using TripService.Domain.Services;
 
 namespace TripService.Services
 {
@@ -15,7 +15,7 @@ namespace TripService.Services
             this.context = context;
         }
 
-        public async Task<ChecklistItem> CreateCheckListItem(int travelPlanId, CreateChecklistItemDto dto)
+        public async Task<CheckListItemResponseDto> CreateCheckListItem(int travelPlanId, CreateChecklistItemDto dto)
         {
             ChecklistItem checklistItem = new ChecklistItem
             {
@@ -25,7 +25,13 @@ namespace TripService.Services
             };
             await context.ChecklistItems.AddAsync(checklistItem);
             await context.SaveChangesAsync();
-            return checklistItem;
+            return new CheckListItemResponseDto
+            {
+                Id = checklistItem.Id,
+                TravelPlanId = checklistItem.TravelPlanId,
+                Name = checklistItem.name,
+                IsCompleted = checklistItem.isCompleted
+            };
         }
 
         public async Task<bool> DeleteCheckListItem(int id, int travelPlanId)
@@ -39,9 +45,18 @@ namespace TripService.Services
             return true;
         }
 
-        public async Task<List<ChecklistItem>> GetAllCheckListItems(int travelPlanId)
+        public async Task<List<CheckListItemResponseDto>> GetAllCheckListItems(int travelPlanId)
         {
-            return await context.ChecklistItems.Where(c => c.TravelPlanId == travelPlanId).ToListAsync();
+            return await context.ChecklistItems
+        .Where(c => c.TravelPlanId == travelPlanId)
+        .Select(c => new CheckListItemResponseDto
+        {
+            Id = c.Id,
+            TravelPlanId = c.TravelPlanId,
+            Name = c.name,
+            IsCompleted = c.isCompleted
+        })
+        .ToListAsync();
         }
 
         public async Task<bool> ToggleCheckListItem(int id, bool isCompleted,int travelPlanId)

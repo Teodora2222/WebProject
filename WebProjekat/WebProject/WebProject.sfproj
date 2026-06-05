@@ -37,10 +37,16 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ExpenseService\ExpenseService.csproj" />
+    <ProjectReference Include="..\Gateway\Gateway.csproj">
+      <ServiceLaunchUrl>http://localhost:{ServicePort}/swagger</ServiceLaunchUrl>
+    </ProjectReference>
     <ProjectReference Include="..\TripService\TripService.csproj">
       <ServiceLaunchUrl>http://localhost:{ServicePort}/swagger</ServiceLaunchUrl>
     </ProjectReference>
     <ProjectReference Include="..\UserService\UserService.csproj">
+      <ServiceLaunchUrl>http://localhost:{ServicePort}/swagger</ServiceLaunchUrl>
+    </ProjectReference>
+    <ProjectReference Include="..\ValidatorService\ValidatorService.csproj">
       <ServiceLaunchUrl>http://localhost:{ServicePort}/swagger</ServiceLaunchUrl>
     </ProjectReference>
   </ItemGroup>

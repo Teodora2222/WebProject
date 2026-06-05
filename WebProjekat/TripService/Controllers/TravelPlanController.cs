@@ -1,10 +1,9 @@
 ﻿using System.Security.Claims;
+using Contract.Dtos.Trip;
+using Contract.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TripService.Domain.DTOs;
-using TripService.Domain.Enum;
 using TripService.Domain.Helpers;
-using TripService.Domain.Services;
 
 namespace TripService.Controllers
 {

@@ -1,4 +1,4 @@
-﻿using ExpenseService.Domain.Models;
+﻿using ExpenseService.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace ExpenseService.Data

@@ -11,7 +11,7 @@ export class DestinationApi implements IDestinationApi {
 
     constructor(token: string) {
         this.axiosInstance = axios.create({
-            baseURL: import.meta.env.VITE_TRIP_SERVICE_API,
+            baseURL: import.meta.env.VITE_API_URL,
             headers: { Authorization: `Bearer ${token}` },
         });
     }

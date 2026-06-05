@@ -11,7 +11,7 @@ export class UserApi implements IUserApi {
 
     constructor(token?: string) {
         this.axiosInstance = axios.create({
-            baseURL: import.meta.env.VITE_USERS_SERVICE_API,
+            baseURL: import.meta.env.VITE_API_URL,
             headers: token ? { Authorization: `Bearer ${token}` } : {},
         });
     }

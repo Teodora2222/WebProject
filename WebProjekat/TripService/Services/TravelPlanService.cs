@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Diagnostics;
+using Contract.Dtos.Trip;
+using Contract.Services;
+using Microsoft.EntityFrameworkCore;
 using TripService.Data;
-using TripService.Domain.DTOs;
 using TripService.Domain.Models;
-using TripService.Domain.Services;
 
 namespace TripService.Services
 {
@@ -15,7 +16,7 @@ namespace TripService.Services
             this.context = context;
         }
 
-        public async Task<TravelPlan> createTravelPlan(CreateTravelPlanDto dto, int userId)
+        public async Task<TravelPlanDto> createTravelPlan(CreateTravelPlanDto dto, int userId)
         {
             if (dto.EndDate < dto.StartDate)
                 throw new ArgumentException("End date cannot be before start date");
@@ -37,7 +38,18 @@ namespace TripService.Services
 
             await context.TravelPlans.AddAsync(travel);
             await context.SaveChangesAsync();
-            return travel;
+            return new TravelPlanDto
+            {
+                Id = travel.id,
+                UserId = travel.userId,
+                Title = travel.title,
+                Description = travel.description,
+                StartDate = travel.startDate,
+                EndDate = travel.endDate,
+                Budget = travel.budget,
+                Notes = travel.notes,
+                CreatedAt = travel.createdAt
+            };
         }
 
         public async Task<bool> deleteTravelPlan(int id,int userId)
@@ -52,22 +64,63 @@ namespace TripService.Services
             return true;
         }
 
-        public async Task<List<TravelPlan>> getAllTravelPlansAdmin()
+        public async Task<List<TravelPlanDto>> getAllTravelPlansAdmin()
         {
-            return await context.TravelPlans.ToListAsync(); 
+            return await context.TravelPlans
+              .Select(t => new TravelPlanDto
+            {
+                Id = t.id,
+                UserId = t.userId,
+                Title = t.title,
+                Description = t.description,
+                StartDate = t.startDate,
+                EndDate = t.endDate,
+                Budget = t.budget,
+                Notes = t.notes,
+                CreatedAt = t.createdAt
+            })
+            .ToListAsync();
         }
 
-        public async Task<List<TravelPlan>> getAllTravelPlans(int userId)
+        public async Task<List<TravelPlanDto>> getAllTravelPlans(int userId)
         {
             return await context.TravelPlans
                 .Where(t => t.userId == userId)
-                .ToListAsync();
+                .Select(t => new TravelPlanDto
+                {
+                    Id = t.id,
+                    UserId = t.userId,
+                    Title = t.title,
+                    Description = t.description,
+                    StartDate = t.startDate,
+                    EndDate = t.endDate,
+                    Budget = t.budget,
+                    Notes = t.notes,
+                    CreatedAt = t.createdAt
+                })
+            .ToListAsync();
         }
 
-        public async Task<TravelPlan?> getTravelPlan(int id, int userId)
+        public async Task<TravelPlanDto?> getTravelPlan(int id, int userId)
         {
-            return await context.TravelPlans.FirstOrDefaultAsync(t => t.id == id
-                && t.userId == userId);
+            var travel = await context.TravelPlans
+                .FirstOrDefaultAsync(t => t.id == id && t.userId == userId);
+
+            if (travel == null)
+                return null;
+
+            return new TravelPlanDto
+            {
+                Id = travel.id,
+                UserId = travel.userId,
+                Title = travel.title,
+                Description = travel.description,
+                StartDate = travel.startDate,
+                EndDate = travel.endDate,
+                Budget = travel.budget,
+                Notes = travel.notes,
+                CreatedAt = travel.createdAt
+            };
         }
 
         public async Task<bool> updateTravelPlan(int id, UpdateTravelPlanDto dto, int userId)
@@ -88,6 +141,28 @@ namespace TripService.Services
                 return true;
             }
             return false;
+        }
+
+        public async Task<TravelPlanDto?> getTravelPlanById(int id)
+        {
+            var travel = await context.TravelPlans
+                .FirstOrDefaultAsync(t => t.id == id);
+
+            if (travel == null)
+                return null;
+
+            return new TravelPlanDto
+            {
+                Id = travel.id,
+                UserId = travel.userId,
+                Title = travel.title,
+                Description = travel.description,
+                StartDate = travel.startDate,
+                EndDate = travel.endDate,
+                Budget = travel.budget,
+                Notes = travel.notes,
+                CreatedAt = travel.createdAt
+            };
         }
     }
 }

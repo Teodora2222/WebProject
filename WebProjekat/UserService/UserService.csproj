@@ -17,14 +17,15 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Microsoft.ServiceFabric.AspNetCore.Kestrel" Version="8.4.205-rc" />
+		<PackageReference Include="Microsoft.ServiceFabric.Services.Remoting" Version="8.4.268" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
 		<PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
 	</ItemGroup>
-  <ItemGroup>
-    <Folder Include="Helpers\" />
-    <Folder Include="Reporsitories\" />
-  </ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Contract\Contract.csproj" />
+	</ItemGroup>
 
 
 	<ItemGroup>

@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics;
+using Contract.Dtos.Trip;
+using Contract.Services;
 using Microsoft.EntityFrameworkCore;
 using TripService.Data;
-using TripService.Domain.DTOs;
 using TripService.Domain.Models;
-using TripService.Domain.Services;
 
 namespace TripService.Services
 {
@@ -16,7 +16,7 @@ namespace TripService.Services
             this.context = context;
         }
 
-        public async Task<Destination> createDestination(CreateDestinationDto dto, int travelPlanId)
+        public async Task<DestinationDto> createDestination(CreateDestinationDto dto, int travelPlanId)
         {
             if (dto.EndDate < dto.StartDate)
                 throw new ArgumentException("End date cannot be before start date");
@@ -34,7 +34,17 @@ namespace TripService.Services
 
             await context.Destinations.AddAsync(destination);
             await context.SaveChangesAsync();
-            return destination;
+            return new DestinationDto
+            {
+                Id = destination.id,
+                TravelId = destination.travelId,
+                Name = destination.name,
+                Location = destination.location,
+                StartDate = destination.startDate,
+                EndDate = destination.endDate,
+                Description = destination.description,
+                Note = destination.note
+            };
         }
 
         public async Task<bool> deleteDestination(int id)
@@ -49,14 +59,43 @@ namespace TripService.Services
             return true;
         }
 
-        public async Task<List<Destination>> getAllDestinastons(int travelPlanId)
+        public async Task<List<DestinationDto>> getAllDestinastons(int travelPlanId)
         {
-            return await context.Destinations.Where(d => d.travelId == travelPlanId).ToListAsync();
+            return await context.Destinations
+                .Where(d => d.travelId == travelPlanId)
+                .Select(d => new DestinationDto
+                {
+                    Id = d.id,
+                    TravelId = d.travelId,
+                    Name = d.name,
+                    Location = d.location,
+                    StartDate = d.startDate,
+                    EndDate = d.endDate,
+                    Description = d.description,
+                    Note = d.note
+                })
+                .ToListAsync();
         }
 
-        public async Task<Destination?> getDestination(int id)
+        public async Task<DestinationDto> getDestination(int id)
         {
-            return await context.Destinations.FirstOrDefaultAsync(d => d.id == id);
+            var destination = await context.Destinations
+                .FirstOrDefaultAsync(d => d.id == id);
+
+            if (destination == null)
+                return null;
+
+            return new DestinationDto
+            {
+                Id = destination.id,
+                TravelId = destination.travelId,
+                Name = destination.name,
+                Location = destination.location,
+                StartDate = destination.startDate,
+                EndDate = destination.endDate,
+                Description = destination.description,
+                Note = destination.note
+            };
         }
 
         public async Task<bool> updateDestination(int id, UpdateDestinationDto dto)

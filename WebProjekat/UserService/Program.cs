@@ -1,11 +1,11 @@
 using System.Text;
+using Contract.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.ServiceFabric.Services.Runtime;
 using UserService;
 using UserService.Data;
-using UserService.Domain.Services;
 using UserService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,8 +23,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     //options.UseSqlServer(connStr);
 });
 
-builder.Services.AddScoped<ILoginService, LoginService>();
-builder.Services.AddScoped<IRegisterService, RegisterService>();
+
 builder.Services.AddScoped<IUserService, UserService.Services.UserService>();
 
 var jwtKey = "TvojTajniKljucKojiMoraBitiDugacak32Karaktera!";
@@ -60,12 +59,11 @@ builder.Services.AddCors(options =>
               .AllowAnyMethod();
     });
 });
+var serviceProvider = builder.Services.BuildServiceProvider();
 
-Task.Run(async () =>
-{
-    await ServiceRuntime.RegisterServiceAsync("UserServiceType",
-        context => new UserServiceHost(context));
-});
+ServiceRuntime.RegisterServiceAsync("UserServiceType",
+    context => new UserServiceHost(context, serviceProvider))
+    .GetAwaiter().GetResult();
 
 var app = builder.Build();
 

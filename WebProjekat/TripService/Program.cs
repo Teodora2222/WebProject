@@ -1,11 +1,11 @@
 ﻿using System.Text;
+using Contract.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.ServiceFabric.Services.Runtime;
 using TripService;
 using TripService.Data;
-using TripService.Domain.Services;
 using TripService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -99,11 +99,11 @@ builder.Services.AddCors(options =>
         });
 });
 
-Task.Run(async () =>
-{
-    await ServiceRuntime.RegisterServiceAsync("TripServiceType",
-        context => new TripServiceHost(context));
-});
+var serviceProvider = builder.Services.BuildServiceProvider();
+
+ServiceRuntime.RegisterServiceAsync("TripServiceType",
+    context => new TripServiceHost(context, serviceProvider))
+    .GetAwaiter().GetResult();
 
 
 var app = builder.Build();

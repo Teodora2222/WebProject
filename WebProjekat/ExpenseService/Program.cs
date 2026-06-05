@@ -1,7 +1,7 @@
 using System.Text;
+using Contract.Services;
 using ExpenseService;
 using ExpenseService.Data;
-using ExpenseService.Domain.Services;
 using ExpenseService.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -88,11 +88,12 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-Task.Run(async () =>
-{
-    await ServiceRuntime.RegisterServiceAsync("ExpenseServiceType",
-        context => new ExpenseServiceHost(context));
-});
+var serviceProvider = builder.Services.BuildServiceProvider();
+
+ServiceRuntime.RegisterServiceAsync("ExpenseServiceType",
+    context => new ExpenseServiceHost(context, serviceProvider))
+    .GetAwaiter().GetResult();
+
 
 var app = builder.Build();
 

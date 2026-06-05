@@ -1,9 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Contract.Dtos.Trip;
+using Contract.Services;
+using Microsoft.EntityFrameworkCore;
 using TripService.Data;
-using TripService.Domain.DTOs;
-using TripService.Domain.Enum;
 using TripService.Domain.Models;
-using TripService.Domain.Services;
 
 namespace TripService.Services
 {
@@ -38,18 +37,42 @@ namespace TripService.Services
             };
         }
 
-        public async Task<SharedTravelPlan?> GetShareByToken(string token)
-        {
-            return await context.SharedTravelPlans
-                .FirstOrDefaultAsync(s => s.Token == token);
-        }
-
-        public async Task<SharePermission?> GetPermissionFromToken(string token)
+        public async Task<SharedTravelPlanDto?> GetShareByToken(string token)
         {
             var share = await context.SharedTravelPlans
                 .FirstOrDefaultAsync(s => s.Token == token);
 
-            return share != null ? Enum.Parse<SharePermission>(share.Permission) : null;
+            if (share == null)
+                return null;
+
+            return new SharedTravelPlanDto
+            {
+                Id = share.Id,
+                TravelPlanId = share.TravelPlanId,
+                Token = share.Token,
+                Permission = share.Permission,
+                CreatedAt = share.CreatedAt,
+                ExpiresAt = share.ExpiresAt
+            };
+        }
+
+        public async Task<SharedTravelPlanDto?> GetPermissionFromToken(string token)
+        {
+            var share = await context.SharedTravelPlans
+                .FirstOrDefaultAsync(s => s.Token == token);
+
+            if (share == null)
+                return null;
+
+            return new SharedTravelPlanDto
+            {
+                Id = share.Id,
+                TravelPlanId = share.TravelPlanId,
+                Token = share.Token,
+                Permission = share.Permission,
+                CreatedAt = share.CreatedAt,
+                ExpiresAt = share.ExpiresAt
+            };
         }
     }
 }

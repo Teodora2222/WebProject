@@ -1,10 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Contract.Dtos.Trip;
+using Contract.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
-using TripService.Domain.DTOs;
-using TripService.Domain.Enum;
 using TripService.Domain.Helpers;
-using TripService.Domain.Services;
 using TripService.Services;
 
 namespace TripService.Controllers
@@ -52,7 +51,7 @@ namespace TripService.Controllers
                     return Forbid("VIEW only");
                 }
                 var result = await destinationService.createDestination(dto, travelPlanId);
-                return CreatedAtAction(nameof(getDestination), new { travelPlanId, id = result.id }, result);
+                return CreatedAtAction(nameof(getDestination), new { travelPlanId, id = result.Id }, result);
             }
             catch (Exception)
             {
