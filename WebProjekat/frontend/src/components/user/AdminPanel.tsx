@@ -3,6 +3,7 @@ import toast from "react-hot-toast";
 import type { UserDto } from "../../models/users/UserDto";
 import type { IUserApi } from "../../api/users/IUserApi";
 import { UserRole } from "../../enums/UserRole";
+import { ConfirmModal } from "../modal/ConfirmModal";
 
 interface Props {
   userApi: IUserApi;
@@ -11,6 +12,7 @@ interface Props {
 export function AdminPanel({ userApi }: Props) {
   const [users, setUsers] = useState<UserDto[]>([]);
   const [loading, setLoading] = useState(true);
+  const [deleteId, setDeleteId] = useState<number | null>(null);
 
   useEffect(() => {
     userApi.getAll()
@@ -19,16 +21,28 @@ export function AdminPanel({ userApi }: Props) {
       .finally(() => setLoading(false));
   }, []);
 
-  const handleDelete = async (id: number) => {
-    if (!confirm("Delete this user?")) return;
-    try {
-      await userApi.deleteUserById(id);
-      setUsers((prev) => prev.filter((u) => u.id !== id));
-      toast.success("User deleted.");
-    } catch {
-      toast.error("Failed to delete user.");
-    }
-  };
+const handleDelete = (id: number) => {
+  setDeleteId(id);
+};
+
+const confirmDelete = async () => {
+  if (!deleteId) return;
+
+  try {
+    await userApi.deleteUserById(deleteId);
+
+    setUsers(prev =>
+      prev.filter(u => u.id !== deleteId)
+    );
+
+    toast.success("User deleted.");
+  } catch {
+    toast.error("Failed to delete user.");
+  } finally {
+    setDeleteId(null);
+  }
+};
+
 return (
   <div className="min-h-screen  text-white px-6 py-10">
 
@@ -104,6 +118,14 @@ return (
           </div>
         </div>
       )}
+      {deleteId && (
+  <ConfirmModal
+    title="Delete user"
+    message="This user and all associated data will be removed."
+    onConfirm={confirmDelete}
+    onCancel={() => setDeleteId(null)}
+  />
+)}
     </div>
   </div>
 );

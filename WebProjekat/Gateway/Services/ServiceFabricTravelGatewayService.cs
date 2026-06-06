@@ -86,5 +86,13 @@ namespace Gateway.Services
 
         public Task<List<TravelPlanDto>> GetAllTravelPlansAdminAsync() => CreateProxy() 
             .GetAllTravelPlansAdmin();
+
+        public Task<bool> UpdateTravelPlanAdminAsync(int id, UpdateTravelPlanDto dto) => CreateProxy()
+            .UpdateTravelPlanAdmin(id, dto);
+
+
+        public Task<bool> DeleteTravelPlanAdminAsync(int id) => CreateProxy()
+            .DeleteTravelPlanAdmin(id);
+
     }
 }

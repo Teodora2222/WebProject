@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import type { TravelPlanDto } from "../../models/travel/TravelPlanDto";
 import type { ITravelPlanApi } from "../../api/travel/ITravelPlanApi";
+import { ConfirmModal } from "../modal/ConfirmModal";
 
 const getSeasonImage = (dateStr: string) => {
   const month = new Date(dateStr).getMonth() + 1;
@@ -19,6 +20,7 @@ interface Props {
 export function TravelPlansList({ travelPlanApi }: Props) {
   const [plans, setPlans] = useState<TravelPlanDto[]>([]);
   const [loading, setLoading] = useState(true);
+  const [deleteId, setDeleteId] = useState<number | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => { fetchPlans(); }, []);
@@ -34,16 +36,27 @@ export function TravelPlansList({ travelPlanApi }: Props) {
     }
   };
 
-  const handleDelete = async (id: number) => {
-    if (!confirm("Delete this travel plan?")) return;
-    try {
-      await travelPlanApi.deleteTravelPlan(id);
-      setPlans((prev) => prev.filter((p) => p.id !== id));
-      toast.success("Plan deleted.");
-    } catch {
-      toast.error("Failed to delete.");
-    }
-  };
+const handleDelete = (id: number) => {
+  setDeleteId(id);
+};
+
+  const confirmDelete = async () => {
+  if (!deleteId) return;
+
+  try {
+    await travelPlanApi.deleteTravelPlan(deleteId);
+
+    setPlans(prev =>
+      prev.filter(p => p.id !== deleteId)
+    );
+
+    toast.success("Plan deleted.");
+  } catch {
+    toast.error("Failed to delete.");
+  } finally {
+    setDeleteId(null);
+  }
+};
 
   const formatDate = (dateStr: string) =>
     new Date(dateStr).toLocaleDateString("en-GB", { day: "numeric", month: "short" });
@@ -115,6 +128,14 @@ export function TravelPlansList({ travelPlanApi }: Props) {
           ))}
         </div>
       )}
+      {deleteId && (
+  <ConfirmModal
+    title="Delete trip"
+    message="All destinations, activities, expenses and checklist items will be removed."
+    onConfirm={confirmDelete}
+    onCancel={() => setDeleteId(null)}
+  />
+)}
     </div>
   );
 }

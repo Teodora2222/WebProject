@@ -23,7 +23,7 @@ namespace Contract.Services
          Task<List<TravelPlanDto>> getAllTravelPlansAdmin();
 
          Task<TravelPlanDto?> getTravelPlanById(int id);
-
-
+         Task<bool> updateTravelPlanAdmin(int id, UpdateTravelPlanDto dto);
+         Task<bool> deleteTravelPlanAdmin(int id);
     }
 }

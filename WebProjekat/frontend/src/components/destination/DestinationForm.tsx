@@ -90,7 +90,9 @@ if (endDate && (endDate < tripStart || endDate > tripEnd)) {
         await destinationApi.createDestination(Number(travelPlanId), dto);
         toast.success("Destination added!");
       }
-      navigate(-1);
+      navigate(`/trips/${travelPlanId}`, {
+  state: { tab: "destinations" }
+});;
     } catch {
       toast.error("Something went wrong.");
     } finally {
@@ -112,7 +114,9 @@ if (endDate && (endDate < tripStart || endDate > tripEnd)) {
       <div className="w-full max-w-2xl">
 
         <button
-          onClick={() => navigate(-1)}
+          onClick={() => navigate(`/trips/${travelPlanId}`, {
+    state: { tab: "destinations" }
+  })}
           className="mb-6 flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 border border-white/20 text-white hover:bg-white/20 transition-all duration-200"
         >
           <span className="text-lg">←</span>
@@ -186,7 +190,9 @@ if (endDate && (endDate < tripStart || endDate > tripEnd)) {
 
             <div className="flex justify-end gap-3 mt-2">
               <button
-                onClick={() => navigate(-1)}
+                onClick={() =>navigate(`/trips/${travelPlanId}`, {
+  state: { tab: "destinations" }
+})}
                 className="px-5 py-2 rounded-xl border border-white/20 text-gray-300 hover:bg-white/10 transition"
               >
                 Cancel

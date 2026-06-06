@@ -61,6 +61,8 @@ namespace TripService.Services
             var share = await context.SharedTravelPlans
                 .FirstOrDefaultAsync(s => s.Token == token);
 
+            Console.WriteLine($"FOUND = {share != null}");
+
             if (share == null)
                 return null;
 

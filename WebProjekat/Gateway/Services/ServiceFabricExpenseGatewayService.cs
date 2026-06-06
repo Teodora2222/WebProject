@@ -24,5 +24,8 @@ namespace Gateway.Services
 
         public Task<bool> DeleteExpenseAsync(int id) =>
             CreateProxy().DeleteExpense(id);
+
+        public Task<bool> DeleteExpensesByTravelPlanAsync(int travelPlanId) => 
+            CreateProxy().DeleteExpensesByTravelPlan(travelPlanId);
     }
 }

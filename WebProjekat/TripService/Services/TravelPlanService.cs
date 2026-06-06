@@ -164,5 +164,27 @@ namespace TripService.Services
                 CreatedAt = travel.createdAt
             };
         }
+        public async Task<bool> deleteTravelPlanAdmin(int id)
+        {
+            var travel = await context.TravelPlans.FirstOrDefaultAsync(t => t.id == id);
+            if (travel == null) return false;
+            context.TravelPlans.Remove(travel);
+            await context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> updateTravelPlanAdmin(int id, UpdateTravelPlanDto dto)
+        {
+            var travel = await context.TravelPlans.FirstOrDefaultAsync(t => t.id == id);
+            if (travel == null) return false;
+            travel.title = dto.Title ?? travel.title;
+            travel.description = dto.Description ?? travel.description;
+            travel.startDate = dto.StartDate ?? travel.startDate;
+            travel.endDate = dto.EndDate ?? travel.endDate;
+            travel.budget = dto.Budget ?? travel.budget;
+            travel.notes = dto.Notes ?? travel.notes;
+            await context.SaveChangesAsync();
+            return true;
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Contract.Dtos.Expense;
 using Contract.Services;
+using ExpenseService.Clients;
 using ExpenseService.Data;
 using ExpenseService.Models;
 using Microsoft.EntityFrameworkCore;
@@ -10,10 +11,14 @@ namespace ExpenseService.Services
     public class ExpenseService : IExpenseService
     {
         private readonly AppDbContext context;
+        private readonly ActivityServiceClient activityClient;
 
-        public ExpenseService(AppDbContext appDbContext)
+        public ExpenseService(
+            AppDbContext appDbContext,
+            ActivityServiceClient activityClient)
         {
             context = appDbContext;
+            this.activityClient = activityClient;
         }
 
         public async Task<ExpenseDto> createExpense(CreateExpenseDto dto, int travelPlanId)
@@ -88,9 +93,15 @@ namespace ExpenseService.Services
 
             var total = expenses.Sum(e => e.amount);
 
+            var activities = await activityClient.CreateProxy().getAllActivities(travelId);
+
+            var plannedCost =
+                activities.Sum(a => a.EstimatedCost ?? 0);
+
             return new ExpenseSummaryDto
             {
                 TotalExpenses = total,
+                PlannedActivitiesCost = plannedCost,
                 RemainingBudget = budget - total,
                 Expenses = expenses
             };
@@ -111,6 +122,16 @@ namespace ExpenseService.Services
                 return true;
             }
             return false;
+        }
+
+        public async Task<bool> deleteExpensesByTravelPlan(int travelPlanId)
+        {
+            var expenses = await context.Expenses
+                .Where(e => e.travelPlanId == travelPlanId)
+                .ToListAsync();
+            context.Expenses.RemoveRange(expenses);
+            await context.SaveChangesAsync();
+            return true;
         }
     }
 }

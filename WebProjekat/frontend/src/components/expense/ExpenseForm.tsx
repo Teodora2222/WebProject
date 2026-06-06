@@ -26,8 +26,7 @@ export function ExpenseForm({ expenseApi,travelPlanApi }: Props) {
   const [tripEnd, setTripEnd] = useState("");
 
   const inputClass =
-    "w-full px-5 py-4 rounded-xl bg-white/10 text-white placeholder-white/40 outline-none focus:ring-2 focus:ring-green-400";
-
+  "w-full px-5 py-4 rounded-xl bg-white/20 text-white placeholder-gray-300 outline-none hover:bg-white/30 focus:ring-2 focus:ring-emerald-400 transition";
     useEffect(() => {
   if (travelPlanId) {
     travelPlanApi.getTravelPlan(Number(travelPlanId)).then((trip) => {
@@ -97,20 +96,39 @@ if (date < tripStart || date > tripEnd) {
 
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#020617] via-[#064e3b] to-[#020617]">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#020617] via-[#064e3b] to-[#020617] px-4">
 
-      <div className="w-full max-w-xl bg-white/10 rounded-3xl p-8 border border-white/10">
-         <button
-          onClick={() => navigate(-1)}
-          className="mb-6 flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 border border-white/20 text-white hover:bg-white/20 transition-all duration-200"
-        >
-          <span className="text-lg">←</span>
-          <span className="text-sm">Back</span>
-        </button>
+  <div className="w-full max-w-xl">
+
+    <button
+      onClick={() =>
+        navigate(`/trips/${travelPlanId}`, {
+          state: { tab: "budget" }
+        })
+      }
+      className="mb-6 flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 border border-white/20 text-white hover:bg-white/20 transition-all duration-200"
+     >
+      <span>←</span>
+      <span>Back</span>
+    </button>
+
+    <div className="
+  bg-white/10
+  backdrop-blur-2xl
+  border border-white/20
+  rounded-3xl
+  p-8
+  shadow-[0_0_40px_rgba(0,0,0,0.4)]
+">
         
-        <h1 className="text-2xl font-bold text-white mb-6">
+        <h1 className="text-3xl font-bold text-white mb-6">
           {isEdit ? "Edit Expense" : "Add Expense"}
         </h1>
+         <p className="text-gray-300 mt-1">
+    {isEdit
+      ? "Update expense details"
+      : "Track your trip expenses"}
+  </p>
 
         <div className="flex flex-col gap-4">
 
@@ -158,15 +176,53 @@ if (date < tripStart || date > tripEnd) {
             onChange={(e) => setDescription(e.target.value)}
           />
 
-          <button
-            onClick={handleSubmit}
-            className="mt-4 px-6 py-3 rounded-xl bg-green-500 hover:bg-green-600 text-white font-semibold transition"
-          >
-            {loading ? "Saving..." : "Save"}
-          </button>
+         <div className="flex justify-end gap-3 mt-4">
+  <button
+    onClick={() =>
+      navigate(`/trips/${travelPlanId}`, {
+        state: { tab: "budget" }
+      })
+    }
+    className="
+      px-5 py-3
+      rounded-xl
+      border border-white/20
+      text-white/70
+      hover:bg-white/10
+      transition
+    "
+  >
+    Cancel
+  </button>
+
+  <button
+  onClick={handleSubmit}
+  disabled={loading}
+  className="
+    px-6 py-3
+    rounded-xl
+    bg-gradient-to-r
+    from-emerald-400
+    via-green-500
+    to-teal-500
+    text-white
+    font-semibold
+    shadow-lg
+    hover:shadow-xl
+    hover:scale-105
+    active:scale-95
+    transition-all
+    duration-200
+    disabled:opacity-60
+  "
+>
+  {loading ? "Saving..." : isEdit ? "Save Changes" : "Add Expense"}
+</button>
+</div>
 
         </div>
       </div>
+    </div>
     </div>
   );
 }

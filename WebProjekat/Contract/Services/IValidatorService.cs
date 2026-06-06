@@ -25,6 +25,8 @@ namespace Contract.Services
         Task<List<TravelPlanDto>> GetAllTravelPlans(int userId);
         Task<List<TravelPlanDto>> GetAllTravelPlansAdmin();
         Task<TravelPlanDto?> GetTravelPlanById(int id);
+        Task<bool> UpdateTravelPlanAdmin(int id, UpdateTravelPlanDto dto);
+        Task<bool> DeleteTravelPlanAdmin(int id);
 
         // DESTINATION
 
@@ -64,5 +66,6 @@ namespace Contract.Services
         Task<bool> DeleteExpense(int id);
         Task<List<ExpenseDto>> GetAllExpenses(int travelId);
         Task<ExpenseSummaryDto> GetExpenseSummary(int travelId, decimal budget);
+        Task<bool> DeleteExpensesByTravelPlan(int travelPlanId);
     }
 }

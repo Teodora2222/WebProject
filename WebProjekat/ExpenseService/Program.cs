@@ -1,6 +1,7 @@
 using System.Text;
 using Contract.Services;
 using ExpenseService;
+using ExpenseService.Clients;
 using ExpenseService.Data;
 using ExpenseService.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -24,6 +25,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 });
 
 builder.Services.AddScoped<IExpenseService, ExpenseService.Services.ExpenseService>();
+builder.Services.AddSingleton<ActivityServiceClient>();
 
 var jwtKey = builder.Configuration["Jwt:Key"]
     ?? "TvojTajniKljucKojiMoraBitiDugacak32Karaktera!";

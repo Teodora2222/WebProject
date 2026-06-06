@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System.Data;
+using System.Security.Claims;
 using Contract.Dtos.Trip;
 using Contract.Services;
 using Gateway.Helpers;
@@ -63,20 +64,38 @@ namespace Gateway.Controllers
         {
             try
             {
-                if (!await SharePermissionHelper.HasViewPermission(Request, User, travelPlanService))
+                if (!await SharePermissionHelper.HasViewPermission(
+                    Request, User, travelPlanService))
                 {
                     return Unauthorized();
                 }
+
+                var role = User.FindFirst(ClaimTypes.Role)?.Value;
+
+                if (role == "ADMIN")
+                {
+                    var adminResult =
+                        await travelPlanService.GetTravelPlanByIdAsync(id);
+
+                    if (adminResult == null)
+                        return NotFound();
+
+                    return Ok(adminResult);
+                }
+
                 var userId = GetUserId();
-                var result = await travelPlanService.GetTravelPlanAsync(id, userId);
+
+                var result =
+                    await travelPlanService.GetTravelPlanAsync(id, userId);
+
                 if (result == null)
-                    return NotFound(new { success = false, message = "User not found" });
+                    return NotFound();
 
                 return Ok(result);
             }
             catch (Exception)
             {
-                return StatusCode(500, new { success = false, message = "Internal server error" });
+                return StatusCode(500);
             }
         }
 
@@ -90,8 +109,15 @@ namespace Gateway.Controllers
                     return Forbid("VIEW only");
                 }
 
+                var role = User.FindFirst(ClaimTypes.Role)?.Value;
                 var userId = GetUserId();
-                var result = await travelPlanService.DeleteTravelPlanAsync(id, userId);
+                bool result;
+
+                if (role == "ADMIN")
+                    result = await travelPlanService.DeleteTravelPlanAdminAsync(id);
+                else
+                    result = await travelPlanService.DeleteTravelPlanAsync(id, userId);
+
                 if (!result)
                     return NotFound(new { success = false, message = "Travel Plan not found" });
 
@@ -114,8 +140,18 @@ namespace Gateway.Controllers
                     return Forbid("VIEW only");
                 }
 
+                var role = User.FindFirst(ClaimTypes.Role)?.Value;
                 var userId = GetUserId();
-                var result = await travelPlanService.UpdateTravelPlanAsync(id, dto, userId);
+
+                bool result;
+                if (role == "ADMIN")
+                    result = await travelPlanService.UpdateTravelPlanAdminAsync(id, dto);
+                else
+                    result = await travelPlanService.UpdateTravelPlanAsync(id, dto, userId);
+
+                if (!result)
+                    return NotFound(new { success = false, message = "Not found" });
+
                 return Ok(new { success = true, message = "Travel plan updated" });
             }
             catch (Exception)

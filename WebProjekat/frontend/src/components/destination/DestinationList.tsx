@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import type { DestinationDto } from "../../models/destination/DestinationDto";
 import type { IDestinationApi } from "../../api/destination/IDestinationApi";
+import { ConfirmModal } from "../modal/ConfirmModal";
 
 interface Props {
   destinationApi: IDestinationApi;
@@ -12,6 +13,7 @@ export function DestinationsList({ destinationApi }: Props) {
   const { id: travelPlanId } = useParams();
   const [destinations, setDestinations] = useState<DestinationDto[]>([]);
   const [loading, setLoading] = useState(true);
+  const [deleteId, setDeleteId] = useState<number | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,17 +31,31 @@ export function DestinationsList({ destinationApi }: Props) {
     }
   };
 
-  const handleDelete = async (destId: number, e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (!confirm("Delete this destination?")) return;
-    try {
-      await destinationApi.deleteDestination(Number(travelPlanId), destId);
-      setDestinations((prev) => prev.filter((d) => d.id !== destId));
-      toast.success("Destination deleted.");
-    } catch {
-      toast.error("Failed to delete.");
-    }
-  };
+const handleDelete = (destId: number, e: React.MouseEvent) => {
+  e.stopPropagation();
+  setDeleteId(destId);
+};
+
+  const confirmDelete = async () => {
+  if (!deleteId) return;
+
+  try {
+    await destinationApi.deleteDestination(
+      Number(travelPlanId),
+      deleteId
+    );
+
+    setDestinations(prev =>
+      prev.filter(d => d.id !== deleteId)
+    );
+
+    toast.success("Destination deleted.");
+  } catch {
+    toast.error("Failed to delete.");
+  } finally {
+    setDeleteId(null);
+  }
+};
 
   const formatDate = (dateStr?: string) => {
     if (!dateStr) return "—";
@@ -117,6 +133,15 @@ transition"
           ))}
         </div>
       )}
+
+      {deleteId && (
+  <ConfirmModal
+    title="Delete destination"
+    message="This action cannot be undone."
+    onConfirm={confirmDelete}
+    onCancel={() => setDeleteId(null)}
+  />
+)}
     </div>
   );
 }

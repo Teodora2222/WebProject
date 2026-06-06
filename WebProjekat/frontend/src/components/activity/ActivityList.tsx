@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import type { ActivityDto } from "../../models/activity/ActivityDto";
 import type { IActivityApi } from "../../api/activity/IActivityApi";
 import { Status } from "../../enums/Status";
+import { ConfirmModal } from "../modal/ConfirmModal";
 
 interface Props {
   activityApi: IActivityApi;
@@ -20,6 +21,7 @@ export function ActivitiesList({ activityApi }: Props) {
   const { id: travelPlanId } = useParams();
   const [activities, setActivities] = useState<ActivityDto[]>([]);
   const [loading, setLoading] = useState(true);
+  const [deleteId, setDeleteId] = useState<number | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -37,17 +39,31 @@ export function ActivitiesList({ activityApi }: Props) {
     }
   };
 
-  const handleDelete = async (actId: number, e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (!confirm("Delete this activity?")) return;
-    try {
-      await activityApi.deleteActivity(Number(travelPlanId), actId);
-      setActivities((prev) => prev.filter((a) => a.id !== actId));
-      toast.success("Activity deleted.");
-    } catch {
-      toast.error("Failed to delete.");
-    }
-  };
+  const handleDelete = (destId: number, e: React.MouseEvent) => {
+  e.stopPropagation();
+  setDeleteId(destId);
+};
+
+  const confirmDelete = async () => {
+  if (!deleteId) return;
+
+  try {
+    await activityApi.deleteActivity(
+      Number(travelPlanId),
+      deleteId
+    );
+
+    setActivities(prev =>
+      prev.filter(a => a.id !== deleteId)
+    );
+
+    toast.success("Activity deleted.");
+  } catch {
+    toast.error("Failed to delete.");
+  } finally {
+    setDeleteId(null);
+  }
+};
 
   const formatDate = (dateStr: string) =>
     new Date(dateStr).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
@@ -162,6 +178,15 @@ transition"  >
           ))}
         </div>
       )}
+
+      {deleteId && (
+  <ConfirmModal
+    title="Delete activity"
+    message="This action cannot be undone."
+    onConfirm={confirmDelete}
+    onCancel={() => setDeleteId(null)}
+  />
+)}
     </div>
   );
 }

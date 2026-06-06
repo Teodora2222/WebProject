@@ -12,6 +12,8 @@
   "dependencies": {
     "@types/qrcode.react": "^1.0.5",
     "axios": "^1.15.2",
+    "jspdf": "^4.2.1",
+    "jspdf-autotable": "^5.0.8",
     "jwt-decode": "^4.0.0",
     "qrcode.react": "^4.2.0",
     "react": "^19.2.5",

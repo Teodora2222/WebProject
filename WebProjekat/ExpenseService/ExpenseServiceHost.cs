@@ -46,6 +46,10 @@ namespace ExpenseService
         {
             return ExecuteAsync<IExpenseService, bool>(s => s.updateExpense(id, dto));
         }
+        public Task<bool> deleteExpensesByTravelPlan(int travelPlanId)
+        {
+            return ExecuteAsync<IExpenseService, bool>(s => s.deleteExpensesByTravelPlan(travelPlanId));
+        }
 
         protected override IEnumerable<ServiceReplicaListener> CreateServiceReplicaListeners()
         {
@@ -82,5 +86,6 @@ namespace ExpenseService
                 }
             }
         }
+
     }
 }

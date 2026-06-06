@@ -11,5 +11,6 @@ namespace Contract.Dtos.Expense
         public decimal TotalExpenses { get; set; }
         public decimal RemainingBudget { get; set; }
         public List<ExpenseDto> Expenses { get; set; } = new List<ExpenseDto>();
+        public decimal PlannedActivitiesCost { get; set; }
     }
 }

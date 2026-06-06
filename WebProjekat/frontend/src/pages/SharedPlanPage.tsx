@@ -12,7 +12,7 @@ export function SharedPlanPage() {
   useEffect(() => {
     if (token) {
       axios
-        .get(`${import.meta.env.VITE_TRIP_SERVICE_API}/api/shared/${token}`)
+        .get(`${import.meta.env.VITE_API_URL}/api/shared/${token}`)
         .then((res) => setData(res.data))
         .catch(() => setError(true))
         .finally(() => setLoading(false));

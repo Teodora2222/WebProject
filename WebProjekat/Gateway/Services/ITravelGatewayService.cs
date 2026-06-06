@@ -29,5 +29,7 @@ namespace Gateway.Services
         Task<SharedTravelPlanDto?> GetPermissionFromTokenAsync(string token);
         Task<List<ActivityDto>> GetActivitiesByDateAsync(int travelPlanId,DateTime date);
         Task<List<TravelPlanDto>> GetAllTravelPlansAdminAsync();
+        Task<bool> UpdateTravelPlanAdminAsync(int id, UpdateTravelPlanDto dto);
+        Task<bool> DeleteTravelPlanAdminAsync(int id);
     }
 }

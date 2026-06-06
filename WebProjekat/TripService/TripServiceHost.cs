@@ -26,7 +26,6 @@ namespace TripService
             this.serviceProvider = serviceProvider;
         }
 
-        // ITravelPlanService
         public Task<List<TravelPlanDto>> getAllTravelPlans(int userId) =>
             ExecuteAsync<ITravelPlanService, List<TravelPlanDto>>(s => s.getAllTravelPlans(userId));
 
@@ -42,10 +41,20 @@ namespace TripService
         public Task<bool> updateTravelPlan(int id, UpdateTravelPlanDto dto, int userId) =>
             ExecuteAsync<ITravelPlanService, bool>(s => s.updateTravelPlan(id, dto, userId));
 
+        public Task<TravelPlanDto?> getTravelPlanById(int id) => 
+            ExecuteAsync<ITravelPlanService, TravelPlanDto?>(s => s.getTravelPlanById(id));
+
+        public Task<bool> updateTravelPlanAdmin(int id, UpdateTravelPlanDto dto) =>
+            ExecuteAsync<ITravelPlanService, bool>(s => s.updateTravelPlanAdmin(id, dto));
+
+
+        public Task<bool> deleteTravelPlanAdmin(int id) =>
+            ExecuteAsync<ITravelPlanService, bool>(s => s.deleteTravelPlanAdmin(id));
+
+
         public Task<List<TravelPlanDto>> getAllTravelPlansAdmin() =>
             ExecuteAsync<ITravelPlanService, List<TravelPlanDto>>(s => s.getAllTravelPlansAdmin());
 
-        // IDestinationService
         public Task<List<DestinationDto>> getAllDestinastons(int travelId) =>
             ExecuteAsync<IDestinationService, List<DestinationDto>>(s => s.getAllDestinastons(travelId));
 
@@ -61,7 +70,6 @@ namespace TripService
         public Task<DestinationDto> createDestination(CreateDestinationDto dto, int travelPlanId) =>
             ExecuteAsync<IDestinationService, DestinationDto>(s => s.createDestination(dto, travelPlanId));
 
-        // IActivityService
         public Task<List<ActivityDto>> getAllActivities(int travelId) =>
             ExecuteAsync<IActivityService, List<ActivityDto>>(s => s.getAllActivities(travelId));
 
@@ -80,7 +88,6 @@ namespace TripService
         public Task<ActivityDto> createActivity(CreateActivityDto dto, int travelId) =>
             ExecuteAsync<IActivityService, ActivityDto>(s => s.createActivity(dto, travelId));
 
-        // ICheckListItemService
         public Task<CheckListItemResponseDto> CreateCheckListItem(int travelPlanId, CreateChecklistItemDto dto) =>
             ExecuteAsync<ICheckListItemService, CheckListItemResponseDto>(s => s.CreateCheckListItem(travelPlanId, dto));
 
@@ -93,7 +100,6 @@ namespace TripService
         public Task<bool> DeleteCheckListItem(int id, int travelPlanId) =>
             ExecuteAsync<ICheckListItemService, bool>(s => s.DeleteCheckListItem(id, travelPlanId));
 
-        // IShareService
         public Task<ShareResponseDto> CreateShare(int travelPlanId, CreateShareDto dto) =>
             ExecuteAsync<IShareService, ShareResponseDto>(s => s.CreateShare(travelPlanId, dto));
 
@@ -114,5 +120,6 @@ namespace TripService
             var svc = scope.ServiceProvider.GetRequiredService<TService>();
             return await action(svc);
         }
+
     }
 }

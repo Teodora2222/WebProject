@@ -86,9 +86,19 @@ namespace ValidatorService
             return expenseValidator.DeleteExpense(id);
         }
 
+        public Task<bool> DeleteExpensesByTravelPlan(int travelPlanId)
+        {
+           return expenseValidator.DeleteExpensesByTravelPlan(travelPlanId);
+        }
+
         public Task<bool> DeleteTravelPlan(int id, int userId)
         {
             return travelValidator.DeleteTravelPlan(id, userId);
+        }
+
+        public Task<bool> DeleteTravelPlanAdmin(int id)
+        {
+            return travelValidator.DeleteTravelPlanAdmin(id);
         }
 
         public Task<bool> DeleteUser(int id)
@@ -209,6 +219,11 @@ namespace ValidatorService
         public Task<bool> UpdateTravelPlan(int id, UpdateTravelPlanDto dto, int userId)
         {
             return travelValidator.UpdateTravelPlan(id, dto, userId);
+        }
+
+        public Task<bool> UpdateTravelPlanAdmin(int id, UpdateTravelPlanDto dto)
+        {
+           return travelValidator.UpdateTravelPlanAdmin(id, dto);
         }
 
         public Task<bool> UpdateUser(int id, UpdateUserDto dto)

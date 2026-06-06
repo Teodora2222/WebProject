@@ -65,5 +65,16 @@ namespace ValidatorService.Validators
                 .CreateProxy()
                 .getExpenseSummary(travelId, budget);
         }
+
+        public async Task<bool> DeleteExpensesByTravelPlan(
+            int travelPlanId)
+        {
+            if (travelPlanId <= 0)
+                return false;
+
+            return await expenseClient
+                .CreateProxy()
+                .deleteExpensesByTravelPlan(travelPlanId);
+        }
     }
 }

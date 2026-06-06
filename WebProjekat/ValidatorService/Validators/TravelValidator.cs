@@ -10,19 +10,22 @@ namespace ValidatorService.Validators
         private readonly ActivityServiceClient activityClient;
         private readonly ChecklistServiceClient checkListClient;
         private readonly ShareServiceClient shareClient;
+        private readonly ExpenseServiceClient expenseClient;
 
         public TravelValidator(
             TravelPlanServiceClient travelClient,
             DestinationServiceClient destinationClient,
             ActivityServiceClient activityClient,
             ChecklistServiceClient checkListClient,
-            ShareServiceClient shareClient)
+            ShareServiceClient shareClient,
+            ExpenseServiceClient expenseClient)
         {
             this.travelClient = travelClient;
             this.destinationClient = destinationClient;
             this.activityClient = activityClient;
             this.checkListClient = checkListClient;
             this.shareClient = shareClient;
+            this.expenseClient = expenseClient;
         }
 
         public async Task<TravelPlanDto?> CreateTravelPlan(CreateTravelPlanDto dto, int userId)
@@ -51,8 +54,9 @@ namespace ValidatorService.Validators
             if (id <= 0)
                 return false;
 
-            return await travelClient.CreateProxy()
-                .deleteTravelPlan(id, userId);
+            await expenseClient.CreateProxy().deleteExpensesByTravelPlan(id);
+
+            return await travelClient.CreateProxy().deleteTravelPlan(id, userId);
         }
 
         public async Task<TravelPlanDto?> GetTravelPlan(int id, int userId)
@@ -255,6 +259,29 @@ namespace ValidatorService.Validators
             return await travelClient
                 .CreateProxy()
                 .getTravelPlanById(id);
+        }
+
+        public async Task<bool> DeleteTravelPlanAdmin(
+            int id)
+        {
+            if (id <= 0)
+                return false;
+
+            await expenseClient.CreateProxy().deleteExpensesByTravelPlan(id);
+
+            return await travelClient .CreateProxy() .deleteTravelPlanAdmin(id);
+        }
+
+        public async Task<bool> UpdateTravelPlanAdmin(
+            int id,
+            UpdateTravelPlanDto dto)
+        {
+            if (id <= 0)
+                return false;
+
+            return await travelClient
+                .CreateProxy()
+                .updateTravelPlanAdmin(id, dto);
         }
     }
 }

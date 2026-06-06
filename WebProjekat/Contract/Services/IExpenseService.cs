@@ -20,5 +20,7 @@ namespace Contract.Services
         Task<bool> updateExpense(int id, UpdateExpenseDto dto);
 
         Task<ExpenseDto> createExpense(CreateExpenseDto dto, int travelPlanId);
+
+        Task<bool> deleteExpensesByTravelPlan(int travelPlanId);
     }
 }

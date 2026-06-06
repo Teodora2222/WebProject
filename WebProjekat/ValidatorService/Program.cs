@@ -33,7 +33,8 @@ namespace ValidatorService
                     destinationClient,
                     activityClient,
                     checklistClient,
-                    shareClient);
+                    shareClient,
+                    expenseClient);
 
                 var expenseValidator = new ExpenseValidator(expenseClient);
 

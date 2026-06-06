@@ -9,5 +9,6 @@ namespace Gateway.Services
         Task<ExpenseDto?> CreateExpenseAsync(CreateExpenseDto dto, int travelPlanId);
         Task<bool> UpdateExpenseAsync(int id, UpdateExpenseDto dto);
         Task<bool> DeleteExpenseAsync(int id);
+        Task<bool> DeleteExpensesByTravelPlanAsync(int travelPlanId);
     }
 }
