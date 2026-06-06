@@ -111,7 +111,7 @@ export function ActivityForm({ activityApi ,travelPlanApi}: Props) {
       <div className="w-full max-w-2xl">
 
         <button
-          onClick={() => navigate(-1)}
+          onClick={() => navigate(`/trips/${travelPlanId}`, { state: { tab: "activities" } })}
           className="mb-6 flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 border border-white/20 text-white hover:bg-white/20 transition-all duration-200"
         >
           <span className="text-lg">←</span>

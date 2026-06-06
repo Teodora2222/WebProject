@@ -4,6 +4,7 @@ using Microsoft.ServiceFabric.Services.Runtime;
 using Microsoft.ServiceFabric.Services.Remoting.Runtime;
 using Contract.Services;
 using Contract.Dtos.User;
+using Microsoft.Extensions.DependencyInjection;
 
 
 namespace UserService

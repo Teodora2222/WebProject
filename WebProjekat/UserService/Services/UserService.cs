@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using UserService.Data;
 using UserService.Models;
+using Microsoft.Extensions.Configuration;
 
 
 namespace UserService.Services
