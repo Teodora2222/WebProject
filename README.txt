@@ -5,15 +5,17 @@ Korisnicima omogućava kreiranje planova putovanja, upravljanje destinacijama i 
 
 Korišćene tehnologije : 
 	Frontend - React,TypeScript,Tailwind CSS,Axios,React Router
-	Backend - ASP.NET Core Web API,Entity Framework Core,JWT autentifikacija,Service Fabric
+	Backend - ASP.NET Core, Entity Framework Core, JWT Authentication, Service Fabric
 	Baza podataka - SQL Server
 
 Arhitektura sistema
 
 Sistem je organizovan kao mikroservisna arhitektura.
-UserService zadužen za: registraciju korisnika,prijavu korisnika,generisanje JWT tokena,autentifikaciju i autorizaciju
-TripService zadužen za: planove putovanja,destinacije,aktivnosti,checklist stavke,dijeljenje planova putovanja,QR kod pristup
-ExpenseService zadužen za: troškove,budžet,praćenje potrošnje,smart budget warning
+Gateway – centralna ulazna tačka sistema koja prima zahtjeve sa frontend aplikacije.
+ValidatorService – vrši poslovne validacije i koordinaciju između mikroservisa.
+UserService – registracija korisnika, prijava, JWT autentifikacija i autorizacija.
+TripService – upravljanje planovima putovanja, destinacijama, aktivnostima, checklist stavkama i dijeljenjem planova.
+ExpenseService – upravljanje troškovima, budžetom i upozorenjima o potrošnji.
 
 Funkcionalnosti sistema
 
@@ -33,9 +35,14 @@ Dijeljenje plana putovanja
 Sistem omogućava dijeljenje plana putovanja pomoću QR koda.
 
 Validacije
-
 Sistem provjerava:
-	krajnji datum ne može biti prije početnog,budžet ne može biti negativ,anaktivnosti moraju biti unutar trajanja putovanja,destinacije moraju biti unutar trajanja putovanja,obavezna polja ne mogu biti prazna
+
+- krajnji datum ne može biti prije početnog
+- budžet ne može biti negativan
+- aktivnosti moraju biti unutar trajanja putovanja
+- destinacije moraju biti unutar trajanja putovanja
+- troškovi moraju biti unutar trajanja putovanja
+- obavezna polja ne mogu biti prazna
 
 Baza podataka
 Korišćene su:
@@ -53,13 +60,41 @@ Aplikacija koristi REST principe:
 Pokretanje projekta
 	Potrebno : .NET 8 , Node.js , SQL Server , Visual Studio , Service Fabric Runtime
 
-Pokretanje backend servisa
-Za svaki servis:
-	Pokretanje migracija  -  Update-Database
-	Pokretanje servisa -  dotnet run (bez fabric pokrece se svaki servis posebno sa fabric radi se publish)
+Pokretanje backend sistema:
+1. Pokrenuti SQL Server.
+2. Primijeniti EF Core migracije.
+3. Otvoriti rješenje u Visual Studio.
+4. Postaviti WebProject kao startup projekat.
+5. Pokrenuti aplikaciju preko Service Fabric Local Cluster-a.
 
 Pokretanje frontend aplikacije
 Instalacija paketa:
 	npm install
 Pokretanje aplikacije:
 	npm run dev
+
+Mikroservisi
+
+UserService
+- Registracija korisnika
+- Prijava korisnika
+- JWT autentifikacija
+
+TripService
+- Planovi putovanja
+- Destinacije
+- Aktivnosti
+- Checklist
+- Dijeljenje planova
+- QR kodovi
+
+ExpenseService
+- Troškovi
+- Budžet
+- Praćenje potrošnje
+- Upozorenja o budžetu
+
+ValidatorService
+- Poslovna pravila
+- Validacija zahtjeva
+- Komunikacija između servisa
