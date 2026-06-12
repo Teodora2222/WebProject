@@ -12,7 +12,7 @@ namespace Contract.Services
     {
         public Task<List<ActivityDto>> getAllActivities(int travelId);
 
-        public Task<ActivityDto> getActivity(int id);
+        public Task<ActivityDto?> getActivity(int id);
 
         public Task<List<ActivityDto>> getActivitiesByDate(int travelPlanId, DateTime date);
 

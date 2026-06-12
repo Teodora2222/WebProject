@@ -37,8 +37,8 @@ namespace TripService.Services
                 TravelPlanId = activity.travelPlanId,
                 Name = activity.name,
                 Date = activity.date,
-                Time = activity.time,
-                Location = activity.location,
+                Time = activity.time ?? "",
+                Location = activity.location ?? "",
                 Description = activity.description,
                 EstimatedCost = activity.estimatedCost,
                 Status = activity.status
@@ -68,8 +68,8 @@ namespace TripService.Services
              TravelPlanId = a.travelPlanId,
              Name = a.name,
              Date = a.date,
-             Time = a.time,
-             Location = a.location,
+             Time = a.time ?? "",
+             Location = a.location ?? "",
              Description = a.description,
              EstimatedCost = a.estimatedCost,
              Status = a.status
@@ -77,7 +77,7 @@ namespace TripService.Services
          .ToListAsync();
         }
 
-        public async Task<ActivityDto> getActivity(int id)
+        public async Task<ActivityDto?> getActivity(int id)
         {
             var activity = await context.Activities
                 .FirstOrDefaultAsync(a => a.id == id);
@@ -91,8 +91,8 @@ namespace TripService.Services
                 TravelPlanId = activity.travelPlanId,
                 Name = activity.name,
                 Date = activity.date,
-                Time = activity.time,
-                Location = activity.location,
+                Time = activity.time ?? "",
+                Location = activity.location ?? "",
                 Description = activity.description,
                 EstimatedCost = activity.estimatedCost,
                 Status = activity.status
@@ -109,8 +109,8 @@ namespace TripService.Services
            TravelPlanId = a.travelPlanId,
            Name = a.name,
            Date = a.date,
-           Time = a.time,
-           Location = a.location,
+           Time = a.time ?? "",
+           Location = a.location ?? "",
            Description = a.description,
            EstimatedCost = a.estimatedCost,
            Status = a.status

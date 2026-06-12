@@ -20,7 +20,7 @@ namespace Contract.Dtos.Trip
 
         public string Location { get; set; } = string.Empty;
 
-        public string Description { get; set; } = string.Empty;
+        public string? Description { get; set; }
 
         public decimal? EstimatedCost { get; set; }
 

@@ -12,7 +12,7 @@ namespace Contract.Services
     {
          Task<List<TravelPlanDto>> getAllTravelPlans(int userId);
 
-         Task<TravelPlanDto> getTravelPlan(int id, int userId);
+         Task<TravelPlanDto?> getTravelPlan(int id, int userId);
 
          Task<bool> deleteTravelPlan(int id, int userId);
 

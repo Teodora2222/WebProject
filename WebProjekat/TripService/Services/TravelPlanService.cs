@@ -26,7 +26,7 @@ namespace TripService.Services
 
             TravelPlan travel = new TravelPlan
             {
-                title = dto.Title,
+                title = dto.Title ?? "",
                 description = dto.Description,
                 startDate = dto.StartDate,
                 endDate = dto.EndDate,
@@ -43,11 +43,11 @@ namespace TripService.Services
                 Id = travel.id,
                 UserId = travel.userId,
                 Title = travel.title,
-                Description = travel.description,
+                Description = travel.description ?? "",
                 StartDate = travel.startDate,
                 EndDate = travel.endDate,
                 Budget = travel.budget,
-                Notes = travel.notes,
+                Notes = travel.notes ?? "",
                 CreatedAt = travel.createdAt
             };
         }
@@ -72,11 +72,11 @@ namespace TripService.Services
                 Id = t.id,
                 UserId = t.userId,
                 Title = t.title,
-                Description = t.description,
+                Description = t.description ?? "",
                 StartDate = t.startDate,
                 EndDate = t.endDate,
                 Budget = t.budget,
-                Notes = t.notes,
+                Notes = t.notes ?? "",
                 CreatedAt = t.createdAt
             })
             .ToListAsync();
@@ -91,11 +91,11 @@ namespace TripService.Services
                     Id = t.id,
                     UserId = t.userId,
                     Title = t.title,
-                    Description = t.description,
+                    Description = t.description ?? "",
                     StartDate = t.startDate,
                     EndDate = t.endDate,
                     Budget = t.budget,
-                    Notes = t.notes,
+                    Notes = t.notes ?? "",
                     CreatedAt = t.createdAt
                 })
             .ToListAsync();
@@ -114,11 +114,11 @@ namespace TripService.Services
                 Id = travel.id,
                 UserId = travel.userId,
                 Title = travel.title,
-                Description = travel.description,
+                Description = travel.description ?? "",
                 StartDate = travel.startDate,
                 EndDate = travel.endDate,
                 Budget = travel.budget,
-                Notes = travel.notes,
+                Notes = travel.notes ?? "",
                 CreatedAt = travel.createdAt
             };
         }
@@ -156,11 +156,11 @@ namespace TripService.Services
                 Id = travel.id,
                 UserId = travel.userId,
                 Title = travel.title,
-                Description = travel.description,
+                Description = travel.description ?? "",
                 StartDate = travel.startDate,
                 EndDate = travel.endDate,
                 Budget = travel.budget,
-                Notes = travel.notes,
+                Notes = travel.notes ?? "",
                 CreatedAt = travel.createdAt
             };
         }

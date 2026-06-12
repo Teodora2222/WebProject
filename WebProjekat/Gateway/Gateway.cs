@@ -102,7 +102,8 @@ namespace Gateway
                             {
                                 options.AddPolicy("Frontend", policy =>
                                 {
-                                    policy.WithOrigins("http://localhost:5173")
+                                    policy.WithOrigins("http://localhost:5173",
+                                         "http://192.168.1.7:5173" )
                                           .AllowAnyHeader()
                                           .AllowAnyMethod();
                                 });

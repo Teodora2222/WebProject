@@ -26,12 +26,25 @@ export function ShareModal({ travelPlanId, shareApi, onClose }: Props) {
     }
   };
  
-  const handleCopy = () => {
-    if (!shareUrl) return;
-    navigator.clipboard.writeText(shareUrl);
+  const handleCopy = async () => {
+  if (!shareUrl) return;
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(shareUrl);
+    } else {
+      const el = document.createElement("textarea");
+      el.value = shareUrl;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand("copy");
+      document.body.removeChild(el);
+    }
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
-  };
+  } catch {
+    setCopied(true); 
+  }
+};
  
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">

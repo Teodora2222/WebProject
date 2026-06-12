@@ -27,8 +27,9 @@ namespace TripService.Services
             context.SharedTravelPlans.Add(share);
             await context.SaveChangesAsync();
 
-            //var url = $"http://192.168.1.5:5173/shared/{share.Token}";
-            var url = $"http://localhost:5173/shared/{share.Token}";
+            //192.168.1.7
+            var url = $"http://192.168.1.7:5173/shared/{share.Token}";
+            //var url = $"http://localhost:5173/shared/{share.Token}";
 
             return new ShareResponseDto
             {

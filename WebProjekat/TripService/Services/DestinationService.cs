@@ -39,11 +39,11 @@ namespace TripService.Services
                 Id = destination.id,
                 TravelId = destination.travelId,
                 Name = destination.name,
-                Location = destination.location,
+                Location = destination.location ?? "",
                 StartDate = destination.startDate,
                 EndDate = destination.endDate,
-                Description = destination.description,
-                Note = destination.note
+                Description = destination.description ?? "",
+                Note = destination.note ?? ""
             };
         }
 
@@ -68,16 +68,16 @@ namespace TripService.Services
                     Id = d.id,
                     TravelId = d.travelId,
                     Name = d.name,
-                    Location = d.location,
+                    Location = d.location ?? "",
                     StartDate = d.startDate,
                     EndDate = d.endDate,
-                    Description = d.description,
-                    Note = d.note
+                    Description = d.description ?? "",
+                    Note = d.note ?? ""
                 })
                 .ToListAsync();
         }
 
-        public async Task<DestinationDto> getDestination(int id)
+        public async Task<DestinationDto?> getDestination(int id)
         {
             var destination = await context.Destinations
                 .FirstOrDefaultAsync(d => d.id == id);
@@ -90,11 +90,11 @@ namespace TripService.Services
                 Id = destination.id,
                 TravelId = destination.travelId,
                 Name = destination.name,
-                Location = destination.location,
+                Location = destination.location ?? "",
                 StartDate = destination.startDate,
                 EndDate = destination.endDate,
-                Description = destination.description,
-                Note = destination.note
+                Description = destination.description ?? "",
+                Note = destination.note ?? ""
             };
         }
 

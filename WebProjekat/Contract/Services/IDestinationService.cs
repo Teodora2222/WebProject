@@ -16,7 +16,7 @@ namespace Contract.Services
 
         public Task<bool> updateDestination(int id, UpdateDestinationDto dto);
 
-        public Task<DestinationDto> getDestination(int id);
+        public Task<DestinationDto?> getDestination(int id);
 
         public Task<DestinationDto> createDestination(CreateDestinationDto dto, int travelPlanId);
     }
