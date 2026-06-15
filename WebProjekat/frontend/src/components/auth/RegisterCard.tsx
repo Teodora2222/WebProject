@@ -12,6 +12,7 @@ export function RegisterCard({ usersApi }: AuthProps) {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const emailRegex = /^[a-zA-Z0-9._%+-]{2,}@gmail\.com$/;
 
   const handleRegister = async () => {
     if (!firstName || !lastName || !email || !password) {
@@ -28,6 +29,12 @@ export function RegisterCard({ usersApi }: AuthProps) {
       toast.error("Password must be at least 6 characters.");
       return;
     }
+
+    if (!emailRegex.test(email)) {
+      toast.error("Email must be a valid Gmail address (e.g. ab@gmail.com).");
+      return;
+    }
+
 
     setLoading(true);
 
