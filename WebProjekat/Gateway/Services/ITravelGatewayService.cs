@@ -25,7 +25,6 @@ namespace Gateway.Services
         Task<bool> ToggleCheckListItemAsync(int id, bool isCompleted, int travelPlanId);
         Task<bool> DeleteCheckListItemAsync(int id, int travelPlanId);
         Task<ShareResponseDto?> CreateShareAsync(int travelPlanId, CreateShareDto dto);
-        Task<SharedTravelPlanDto?> GetShareByTokenAsync(string token);
         Task<SharedTravelPlanDto?> GetPermissionFromTokenAsync(string token);
         Task<List<ActivityDto>> GetActivitiesByDateAsync(int travelPlanId,DateTime date);
         Task<List<TravelPlanDto>> GetAllTravelPlansAdminAsync();

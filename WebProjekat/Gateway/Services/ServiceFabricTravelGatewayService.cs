@@ -75,9 +75,6 @@ namespace Gateway.Services
         public Task<ShareResponseDto?> CreateShareAsync(int travelPlanId, CreateShareDto dto) =>
             CreateProxy().CreateShare(travelPlanId, dto);
 
-        public Task<SharedTravelPlanDto?> GetShareByTokenAsync(string token) =>
-            CreateProxy().GetShareByToken(token);
-
         public Task<SharedTravelPlanDto?> GetPermissionFromTokenAsync(string token) => CreateProxy()
                 .GetPermissionFromToken(token);
 

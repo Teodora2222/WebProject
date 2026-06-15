@@ -23,7 +23,7 @@ namespace UserService.Services
             configuration = config;
         }
 
-        public async Task<string> login(LoginDto dto)
+        public async Task<string?> login(LoginDto dto)
         {
             var existingUser = await context.Users
                 .FirstOrDefaultAsync(u => u.email == dto.email);
@@ -130,10 +130,10 @@ namespace UserService.Services
             var user = await context.Users.FirstOrDefaultAsync(u => u.id == id);
             if (user != null)
             {
-                user.firstName = userDto.firstName;
-                user.lastName = userDto.lastName;
-                user.email = userDto.email;
-                user.role = userDto.role;
+                user.firstName = userDto.firstName ?? "";
+                user.lastName = userDto.lastName ?? "";
+                user.email = userDto.email ?? "";
+                user.role = userDto.role  ?? "";
 
                 await context.SaveChangesAsync();
                 return true;

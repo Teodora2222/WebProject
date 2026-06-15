@@ -9,6 +9,7 @@ export function exportTripPdf(
   checklist: any[]
 ) {
   const doc = new jsPDF();
+  
 
   const totalExpenses = expenses.reduce(
     (sum, e) => sum + Number(e.amount || 0),
@@ -183,6 +184,13 @@ export function exportTripPdf(
 
   y = (doc as any).lastAutoTable.finalY + 15;
 
+  const pageHeight = doc.internal.pageSize.height;
+
+  if (y + 35 > pageHeight) {
+    doc.addPage();
+    y = 20;
+  }
+
   doc.setFillColor(240, 253, 244);
   doc.roundedRect(14, y, 180, 28, 3, 3, "F");
 
@@ -200,8 +208,6 @@ export function exportTripPdf(
     20,
     y + 20
   );
-
-  const pageHeight = doc.internal.pageSize.height;
 
   doc.setFontSize(8);
   doc.setTextColor(120);

@@ -106,9 +106,6 @@ namespace TripService
         public Task<SharedTravelPlanDto?> GetPermissionFromToken(string token) =>
             ExecuteAsync<IShareService, SharedTravelPlanDto?>(s => s.GetPermissionFromToken(token));
 
-        public Task<SharedTravelPlanDto?> GetShareByToken(string token) =>
-            ExecuteAsync<IShareService, SharedTravelPlanDto?>(s => s.GetShareByToken(token));
-
         protected override IEnumerable<ServiceInstanceListener> CreateServiceInstanceListeners()
         {
             return this.CreateServiceRemotingInstanceListeners();

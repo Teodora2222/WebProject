@@ -55,7 +55,6 @@ export function SharedPlanPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#020617] via-[#064e3b] to-[#020617] text-white">
 
-      {/* Header */}
       <div className="border-b border-white/10 px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <span className="text-2xl">✈️</span>
@@ -66,13 +65,12 @@ export function SharedPlanPage() {
             ? "border-yellow-400/30 text-yellow-300 bg-yellow-500/10"
             : "border-blue-400/30 text-blue-300 bg-blue-500/10"
         }`}>
-          {isReadOnly ? "👁️ View only" : "✏️ Edit access"}
+          {isReadOnly ? " View only" : " Edit access"}
         </span>
       </div>
 
       <div className="max-w-3xl mx-auto px-6 py-10 space-y-6">
 
-        {/* Hero */}
         <div className="bg-white/5 border border-white/10 rounded-3xl p-8">
           <div className="flex items-start justify-between gap-4">
             <div>
@@ -86,7 +84,6 @@ export function SharedPlanPage() {
             </div>
           </div>
 
-          {/* Stats */}
           <div className="grid grid-cols-3 gap-4 mt-8">
             <div className="bg-white/5 rounded-2xl p-4 border border-white/5">
               <p className="text-white/40 text-xs uppercase tracking-wide mb-1">Start</p>
@@ -103,7 +100,6 @@ export function SharedPlanPage() {
           </div>
         </div>
 
-        {/* Budget & Notes */}
         <div className="grid grid-cols-2 gap-4">
           <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
             <p className="text-white/40 text-xs uppercase tracking-wide mb-2">Budget</p>
@@ -115,7 +111,6 @@ export function SharedPlanPage() {
           </div>
         </div>
 
-        {/* Edit access CTA */}
         {!isReadOnly && (
           <div className="bg-blue-500/10 border border-blue-400/20 rounded-2xl p-6 flex items-center justify-between">
             <div>
@@ -131,10 +126,9 @@ export function SharedPlanPage() {
           </div>
         )}
 
-        {/* View only notice */}
         {isReadOnly && (
           <p className="text-white/20 text-sm text-center py-4">
-            👁️ You have view-only access to this trip plan.
+             You have view-only access to this trip plan.
           </p>
         )}
       </div>

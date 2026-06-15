@@ -56,7 +56,6 @@ namespace Contract.Services
         // SHARE
 
         Task<ShareResponseDto?> CreateShare(int travelPlanId, CreateShareDto dto);
-        Task<SharedTravelPlanDto?> GetShareByToken(string token);
         Task<SharedTravelPlanDto?> GetPermissionFromToken(string token);
 
         // EXPENSE

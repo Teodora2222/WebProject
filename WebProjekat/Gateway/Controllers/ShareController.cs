@@ -29,7 +29,7 @@ namespace Gateway.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GetSharedPlan(string token)
         {
-            var share = await shareService.GetShareByTokenAsync(token);
+            var share = await shareService.GetPermissionFromTokenAsync(token);
 
             if (share == null)
                 return NotFound(new { message = "Invalid link" });

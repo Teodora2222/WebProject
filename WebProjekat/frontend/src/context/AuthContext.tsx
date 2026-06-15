@@ -7,15 +7,13 @@ import type { JwtTokenClaims } from '../types/auth/JwtTokenClaims';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Helper funkcija za dekodiranje JWT tokena
 const decodeJWT = (token: string): JwtTokenClaims | null => {
     try {
         const decoded = jwtDecode<JwtTokenClaims>(token);
         
-        // Proveri da li token ima potrebna polja
         if (decoded.sub && decoded.email && decoded.role) {
             return {
-                sub: decoded.sub,       //sub posto ne postoji id pri kreiranju tokena vec identity
+                sub: decoded.sub,       
                 email: decoded.email,
                 role: decoded.role
             };
@@ -23,12 +21,11 @@ const decodeJWT = (token: string): JwtTokenClaims | null => {
         
         return null;
     } catch (error) {
-        console.error('Greška pri dekodiranju JWT tokena:', error);
+        console.error('Error with JWT tokena:', error);
         return null;
     }
 };
 
-// Helper funkcija za proveru da li je token istekao
 const isTokenExpired = (token: string): boolean => {
     try {
         const decoded = jwtDecode(token);
@@ -45,12 +42,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const [token, setToken] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
-    // Učitaj token iz localStorage pri pokretanju
     useEffect(() => {
         const savedToken = readValueByKey("authToken");
         
         if (savedToken) {
-            // Proveri da li je token istekao
             if (isTokenExpired(savedToken)) {
                 removeValueByKey("authToken");
                 removeValueByKey("role");
@@ -89,7 +84,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             saveValueByKey("authToken", newToken);
             saveValueByKey("role", claims.role);
         } else {
-            console.error('Nevažeći ili istekao token');
+            console.error('Invalid token');
         }
     };
 

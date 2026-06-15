@@ -10,7 +10,7 @@ namespace Contract.Services
 {
     public interface IUserService : IService
     {
-        Task<string> login(LoginDto dto);
+        Task<string?> login(LoginDto dto);
 
         Task<bool> register(RegisterDto dto);
 
@@ -18,7 +18,7 @@ namespace Contract.Services
 
         Task<bool> deleteUser(int id);
 
-        Task<UserDto> getUser(int id);
+        Task<UserDto?> getUser(int id);
 
         Task<bool> updateUser(int id, UpdateUserDto dto);
     }

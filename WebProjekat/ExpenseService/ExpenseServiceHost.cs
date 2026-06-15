@@ -22,14 +22,49 @@ namespace ExpenseService
             this.serviceProvider = serviceProvider;
         }
 
-        public Task<ExpenseDto> createExpense(CreateExpenseDto dto, int travelPlanId)
+        public async Task<ExpenseDto> createExpense(CreateExpenseDto dto,int travelPlanId)
         {
-            return ExecuteAsync<IExpenseService, ExpenseDto>(s => s.createExpense(dto, travelPlanId));
+            var result =
+                await ExecuteAsync<IExpenseService, ExpenseDto>(
+                    s => s.createExpense(dto, travelPlanId));
+
+            var queue = await StateManager
+                .GetOrAddAsync<IReliableQueue<string>>(
+                    "expenseAuditQueue");
+
+            using var tx = StateManager.CreateTransaction();
+
+            await queue.EnqueueAsync(
+                tx,
+                $"Created expense '{dto.Name}' amount={dto.Amount}");
+
+            await tx.CommitAsync();
+
+            return result;
         }
 
-        public Task<bool> deleteExpense(int id)
+        public async Task<bool> deleteExpense(int id)
         {
-            return ExecuteAsync<IExpenseService, bool>(s => s.deleteExpense(id));
+            var result =
+                await ExecuteAsync<IExpenseService, bool>(
+                    s => s.deleteExpense(id));
+
+            if (result)
+            {
+                var queue = await StateManager
+                    .GetOrAddAsync<IReliableQueue<string>>(
+                        "expenseAuditQueue");
+
+                using var tx = StateManager.CreateTransaction();
+
+                await queue.EnqueueAsync(
+                    tx,
+                    $"Deleted expense id={id}");
+
+                await tx.CommitAsync();
+            }
+
+            return result;
         }
 
         public Task<List<ExpenseDto>> getAllExpenses(int travelId)
@@ -42,10 +77,30 @@ namespace ExpenseService
             return ExecuteAsync<IExpenseService, ExpenseSummaryDto>(s => s.getExpenseSummary(travelId, budget));
         }
 
-        public Task<bool> updateExpense(int id, UpdateExpenseDto dto)
+        public async Task<bool> updateExpense(int id,UpdateExpenseDto dto)
         {
-            return ExecuteAsync<IExpenseService, bool>(s => s.updateExpense(id, dto));
+            var result =
+                await ExecuteAsync<IExpenseService, bool>(
+                    s => s.updateExpense(id, dto));
+
+            if (result)
+            {
+                var queue = await StateManager
+                    .GetOrAddAsync<IReliableQueue<string>>(
+                        "expenseAuditQueue");
+
+                using var tx = StateManager.CreateTransaction();
+
+                await queue.EnqueueAsync(
+                    tx,
+                    $"Updated expense id={id}");
+
+                await tx.CommitAsync();
+            }
+
+            return result;
         }
+
         public Task<bool> deleteExpensesByTravelPlan(int travelPlanId)
         {
             return ExecuteAsync<IExpenseService, bool>(s => s.deleteExpensesByTravelPlan(travelPlanId));

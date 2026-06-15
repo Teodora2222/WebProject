@@ -27,7 +27,6 @@ namespace TripService.Services
             context.SharedTravelPlans.Add(share);
             await context.SaveChangesAsync();
 
-            //192.168.1.7
             var url = $"http://192.168.1.7:5173/shared/{share.Token}";
             //var url = $"http://localhost:5173/shared/{share.Token}";
 
@@ -38,31 +37,10 @@ namespace TripService.Services
             };
         }
 
-        public async Task<SharedTravelPlanDto?> GetShareByToken(string token)
-        {
-            var share = await context.SharedTravelPlans
-                .FirstOrDefaultAsync(s => s.Token == token);
-
-            if (share == null)
-                return null;
-
-            return new SharedTravelPlanDto
-            {
-                Id = share.Id,
-                TravelPlanId = share.TravelPlanId,
-                Token = share.Token,
-                Permission = share.Permission,
-                CreatedAt = share.CreatedAt,
-                ExpiresAt = share.ExpiresAt
-            };
-        }
-
         public async Task<SharedTravelPlanDto?> GetPermissionFromToken(string token)
         {
             var share = await context.SharedTravelPlans
                 .FirstOrDefaultAsync(s => s.Token == token);
-
-            Console.WriteLine($"FOUND = {share != null}");
 
             if (share == null)
                 return null;

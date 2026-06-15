@@ -2,7 +2,6 @@ using System.Fabric;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
-using Gateway.Clients;
 using Gateway.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
@@ -45,14 +44,14 @@ namespace Gateway
                                 .UseUrls(url);
 
 
-                            builder.Services.AddSingleton<ValidatorServiceClient>();
-                            builder.Services.AddSingleton<UserServiceClient>();
-                            builder.Services.AddSingleton<ActivityServiceClient>();
-                            builder.Services.AddSingleton<TravelPlanServiceClient>();
-                            builder.Services.AddSingleton<DestinationServiceClient>();
-                            builder.Services.AddSingleton<ChecklistServiceClient>();
-                            builder.Services.AddSingleton<ExpenseServiceClient>();
-                            builder.Services.AddSingleton<ShareServiceClient>();
+                            //builder.Services.AddSingleton<ValidatorServiceClient>();
+                            //builder.Services.AddSingleton<UserServiceClient>();
+                            //builder.Services.AddSingleton<ActivityServiceClient>();
+                            //builder.Services.AddSingleton<TravelPlanServiceClient>();
+                            //builder.Services.AddSingleton<DestinationServiceClient>();
+                            //builder.Services.AddSingleton<ChecklistServiceClient>();
+                            //builder.Services.AddSingleton<ExpenseServiceClient>();
+                            //builder.Services.AddSingleton<ShareServiceClient>();
 
 
                             builder.Services.AddScoped<IAuthGatewayService,

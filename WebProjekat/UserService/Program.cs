@@ -19,7 +19,9 @@ services.AddSingleton<IConfiguration>(configuration);
 services.AddDbContext<AppDbContext>(options =>
 {
     options.UseSqlServer(
-        "Server=TEODORA\\SQLEXPRESS01;Database=UserPlannerDB;Trusted_Connection=True;TrustServerCertificate=True;");
+    configuration.GetConnectionString("DefaultConnection"));
+    //options.UseSqlServer(
+        //"Server=TEODORA\\SQLEXPRESS01;Database=UserPlannerDB;Trusted_Connection=True;TrustServerCertificate=True;");
 });
 services.AddScoped<IUserService, UserService.Services.UserService>();
 

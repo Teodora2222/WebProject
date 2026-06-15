@@ -14,6 +14,5 @@ namespace Contract.Services
 
         Task<SharedTravelPlanDto?> GetPermissionFromToken(string token);
 
-        Task<SharedTravelPlanDto?> GetShareByToken(string token);
     }
 }

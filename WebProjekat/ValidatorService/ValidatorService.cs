@@ -165,11 +165,6 @@ namespace ValidatorService
             return travelValidator.GetPermissionFromToken(token);
         }
 
-        public Task<SharedTravelPlanDto?> GetShareByToken(string token)
-        {
-            return travelValidator.GetShareByToken(token);
-        }
-
         public Task<TravelPlanDto?> GetTravelPlan(int id, int userId)
         {
             return travelValidator.GetTravelPlan(id, userId);

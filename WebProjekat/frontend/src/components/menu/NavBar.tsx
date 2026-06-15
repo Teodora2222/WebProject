@@ -17,7 +17,6 @@ export function NavBar() {
     <nav className="sticky top-0 z-50 bg-gradient-to-r from-[#022c22]/90 to-[#020617]/90 backdrop-blur-xl border-b border-white/10">
       <div className="max-w-6xl mx-auto flex items-center justify-between px-6 py-4">
 
-        {/* LOGO */}
         <div
           onClick={() => navigate("/home")}
           className="flex items-center gap-3 cursor-pointer"

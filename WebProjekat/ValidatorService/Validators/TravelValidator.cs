@@ -233,15 +233,6 @@ namespace ValidatorService.Validators
                 .CreateShare(travelPlanId, dto);
         }
 
-        public async Task<SharedTravelPlanDto?> GetShareByToken(string token)
-        {
-            if (string.IsNullOrWhiteSpace(token))
-                return null;
-
-            return await shareClient.CreateProxy()
-                .GetShareByToken(token);
-        }
-
         public async Task<SharedTravelPlanDto?> GetPermissionFromToken(string token)
         {
             if (string.IsNullOrWhiteSpace(token))
